@@ -144,7 +144,7 @@ export class GameManager {
 
     const initialState = puzzleData.initial_state as KlotskiState;
     this.klotskiModel = new KlotskiModel(initialState);
-    this.klotskiView = new KlotskiView(canvas, this.klotskiModel);
+    this.klotskiView = new KlotskiView(canvas, this.klotskiModel, puzzleData.assets, puzzleData.visual_elements);
 
     this.klotskiView.onBlockMove = (blockId: string, direction: Direction) => {
       this.handleKlotskiMove(blockId, direction);

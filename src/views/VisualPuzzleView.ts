@@ -7,12 +7,13 @@
  * - TANGRAM: polyomino assembly — with full story illustration
  */
 
-import { PuzzleType, PUZZLE_TYPE_LABELS } from '../models/PuzzleData';
+import { PuzzleType, PUZZLE_TYPE_LABELS, AssetManifest, VisualElement } from '../models/PuzzleData';
 import type { PathPuzzleState } from '../engines/PathEngine';
 import type { NumberGridState } from '../engines/NumberGridEngine';
 import type { TangramState, PieceDef, PlacedPiece } from '../engines/TangramEngine';
+import { SceneRenderer } from '../renderer/SceneRenderer';
 
-type VisualMode = 'path_finding' | 'number_grid' | 'tangram';
+type VisualMode = 'path_finding' | 'number_grid' | 'tangram' | 'sliding_block';
 
 export class VisualPuzzleView {
   private canvas!: HTMLCanvasElement;
@@ -52,6 +53,11 @@ export class VisualPuzzleView {
   private selectedPieceFlipped = false;
   private ghostCells: [number, number][] = [];
   private ghostValid = false;
+
+  // -- Scene Renderer (Layer 3) --
+  private assets?: AssetManifest;
+  private visualElements?: VisualElement[];
+  private sceneRenderer?: SceneRenderer;
 
   // Layout computed after resize
   private illoH = 0;
@@ -125,6 +131,8 @@ export class VisualPuzzleView {
     hints: string[];
     picarat: number;
     puzzleType: PuzzleType;
+    assets?: AssetManifest;
+    visualElements?: VisualElement[];
   }): void {
     this.mode = params.mode;
     this.title = params.title;
@@ -144,6 +152,18 @@ export class VisualPuzzleView {
     this.selectedPieceRotation = 0;
     this.selectedPieceFlipped = false;
     this.ghostCells = [];
+
+    this.assets = params.assets;
+    this.visualElements = params.visualElements;
+
+    if (this.assets) {
+      this.sceneRenderer = new SceneRenderer();
+      this.sceneRenderer.loadAssets(this.assets).then(() => {
+        this.drawCanvas();
+      });
+    } else {
+      this.sceneRenderer = undefined;
+    }
 
     if (this.mode === 'path_finding') {
       this.pathState = params.state as PathPuzzleState;
@@ -474,6 +494,40 @@ export class VisualPuzzleView {
     ctx.scale(scale, scale);
     const w = this.canvasW;
     const h = this.canvasH;
+
+    // Use SceneRenderer if we have AI assets (Layer 3 Pipeline)
+    if (this.sceneRenderer && this.assets) {
+      const elements: {id: string, x: number, y: number, w: number, h: number}[] = [];
+      
+      if (this.visualElements) {
+         // Simple layout for demo purposes
+         let index = 0;
+         for (const ve of this.visualElements) {
+            elements.push({
+               id: ve.id,
+               x: 50 + (index % 2) * 160,
+               y: 100 + Math.floor(index / 2) * 180,
+               w: 120,
+               h: 120
+            });
+            index++;
+         }
+      }
+
+      this.sceneRenderer.draw(ctx, w, h, elements);
+      
+      // Draw UI overlay (Header text, etc)
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.fillRect(0, 0, w, 50);
+      ctx.fillStyle = this.P.warmLight;
+      ctx.font = `italic 14px var(--font)`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(this.scenario, w / 2, 25);
+      
+      ctx.restore();
+      return;
+    }
 
     // Background
     const grad = ctx.createLinearGradient(0, 0, 0, h);

@@ -5,8 +5,9 @@
  * 纯视图层，通过 onBlockMove 回调将玩家操作传递给控制器。
  */
 
-import { Direction, KlotskiBlock } from '../models/PuzzleData';
+import { Direction, KlotskiBlock, AssetManifest, VisualElement } from '../models/PuzzleData';
 import { KlotskiModel } from '../models/KlotskiModel';
+import { SceneRenderer } from '../renderer/SceneRenderer';
 
 // ─── Constants ────────────────────────────────────────────────
 const CELL_SIZE = 80;
@@ -90,15 +91,35 @@ export class KlotskiView {
   private animation: AnimationState | null = null;
   private animFrameId: number | null = null;
 
+  // Layer 3 AI Asset rendering
+  private sceneRenderer?: SceneRenderer;
+  private assets?: AssetManifest;
+  private visualElements?: VisualElement[];
+
   // Win celebration
   private winActive = false;
   private winStartTime = 0;
   private winFrameId: number | null = null;
 
-  constructor(canvas: HTMLCanvasElement, model: KlotskiModel) {
+  constructor(
+    canvas: HTMLCanvasElement, 
+    model: KlotskiModel, 
+    assets?: AssetManifest, 
+    visualElements?: VisualElement[]
+  ) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d')!;
     this.model = model;
+    this.assets = assets;
+    this.visualElements = visualElements;
+    
+    if (this.assets) {
+      this.sceneRenderer = new SceneRenderer();
+      this.sceneRenderer.loadAssets(this.assets).then(() => {
+        this.render();
+      });
+    }
+
     this.resizeCanvas();
     this.bindEvents();
     this.render();
@@ -332,6 +353,57 @@ export class KlotskiView {
 
     // Clear
     ctx.clearRect(0, 0, w, h);
+
+    if (this.sceneRenderer && this.assets && this.visualElements) {
+       // --- LAYER 3 AI ASSET RENDER ---
+       const elements: {id: string, x: number, y: number, w: number, h: number}[] = [];
+       for (const block of this.model.blocks) {
+         let drawX = PADDING + block.x * CELL_SIZE;
+         let drawY = PADDING + block.y * CELL_SIZE;
+         
+         if (this.animation && this.animation.blockId === block.id && animT !== undefined) {
+            const fromPx = PADDING + this.animation.fromX * CELL_SIZE;
+            const fromPy = PADDING + this.animation.fromY * CELL_SIZE;
+            const toPx = PADDING + this.animation.toX * CELL_SIZE;
+            const toPy = PADDING + this.animation.toY * CELL_SIZE;
+            const ease = 1 - Math.pow(1 - animT, 3);
+            drawX = fromPx + (toPx - fromPx) * ease;
+            drawY = fromPy + (toPy - fromPy) * ease;
+         }
+
+         let posType = '';
+         if (block.isTarget) posType = 'target_block';
+         else if (block.width === 1 && block.height === 2) posType = 'vertical_blocks';
+         else if (block.width === 2 && block.height === 1) posType = 'horizontal_blocks';
+         else if (block.width === 1 && block.height === 1) posType = 'small_blocks';
+
+         const visualElem = this.visualElements.find(v => v.position === posType);
+         if (visualElem) {
+            // Apply slight gap logic if desired, or let the sprite take the whole cell
+            elements.push({
+               id: visualElem.id,
+               x: drawX + BLOCK_GAP,
+               y: drawY + BLOCK_GAP,
+               w: block.width * CELL_SIZE - BLOCK_GAP * 2,
+               h: block.height * CELL_SIZE - BLOCK_GAP * 2
+            });
+         }
+       }
+       this.sceneRenderer.draw(ctx, w, h, elements);
+       
+       // Selection highlight for AI Assets
+       if (this.selectedBlockId) {
+         const block = this.model.getBlockById(this.selectedBlockId);
+         if (block) {
+           ctx.save();
+           ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+           this.roundRect(PADDING + block.x * CELL_SIZE + BLOCK_GAP, PADDING + block.y * CELL_SIZE + BLOCK_GAP, block.width * CELL_SIZE - BLOCK_GAP * 2, block.height * CELL_SIZE - BLOCK_GAP * 2, CORNER_RADIUS);
+           ctx.fill();
+           ctx.restore();
+         }
+       }
+       return;
+    }
 
     // Board background
     ctx.fillStyle = BOARD_BG;
