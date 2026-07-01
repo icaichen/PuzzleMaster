@@ -9,11 +9,14 @@
 import {
   PuzzleData,
   PuzzleType,
+  PuzzleEngine,
   KlotskiBlock,
   KlotskiState,
   Direction,
 } from '../models/PuzzleData';
 import { KlotskiModel } from '../models/KlotskiModel';
+import { SeededRandom } from '../models/SeededRandom';
+import { StoryGenerator } from '../models/StoryGenerator';
 
 // ─── 内部类型 ──────────────────────────────────────────────────
 
@@ -55,7 +58,7 @@ const BOARD_HEIGHT = 5;
 const EXIT_X = 1;
 const EXIT_Y = 3;
 const MAX_ASTAR_NODES = 200_000;
-const MAX_GENERATION_ATTEMPTS = 50;
+const MAX_GENERATION_ATTEMPTS = 500;
 
 // ─── 二叉最小堆 ──────────────────────────────────────────────
 
@@ -125,16 +128,22 @@ class MinHeap {
 
 // ─── 主引擎类 ─────────────────────────────────────────────────
 
-export class KlotskiEngine {
+export class KlotskiEngine implements PuzzleEngine {
+  readonly type = PuzzleType.SLIDING_BLOCK;
+  readonly isBank = false;
+
+  private rng: SeededRandom = new SeededRandom(0);
 
   /**
    * 生成指定难度的华容道谜题。
    *
    * @param difficulty - 难度等级（1-10）
-   * @returns 标准化的 PuzzleData 对象
-   * @throws 如果在最大尝试次数内无法生成合格谜题
+   * @param seed - 随机种子（可选，用于每日挑战的确定性生成）
+   * @returns 标准化的 PuzzleData 对象，失败返回 null
    */
-  generatePuzzle(difficulty: number): PuzzleData {
+  generate(difficulty: number, seed?: number): PuzzleData | null {
+    const actualSeed = seed ?? SeededRandom.randomSeed();
+    this.rng = new SeededRandom(actualSeed);
     const params = this.getDifficultyParams(difficulty);
 
     for (let attempt = 0; attempt < MAX_GENERATION_ATTEMPTS; attempt++) {
@@ -143,11 +152,17 @@ export class KlotskiEngine {
       if (!goalState) continue;
 
       // 第二步：反向随机游走，生成初始状态
-      const reverseSteps = this.randomInt(params.reverseStepsMin, params.reverseStepsMax);
+      const reverseSteps = this.rng.nextInt(params.reverseStepsMin, params.reverseStepsMax);
       const initialModel = this.reverseWalk(goalState, reverseSteps);
 
-      // 第三步：A* 验证最短解步数
-      const solution = this.aStarSolve(initialModel);
+      // 确保曹操已经离开出口位置（否则谜题已解）
+      const targetBlock = initialModel.blocks.find(b => b.isTarget);
+      if (!targetBlock || (targetBlock.x === initialModel.exitX && targetBlock.y === initialModel.exitY)) {
+        continue;
+      }
+
+      // 第三步：BFS 验证最短解步数
+      const solution = this.bfsSolve(initialModel);
       if (!solution) continue;
 
       // 验证步数是否在难度范围内
@@ -159,24 +174,31 @@ export class KlotskiEngine {
       const hints = this.generateHints(solution, initialModel);
 
       // 构造 PuzzleData
+      const storyGen = new StoryGenerator(actualSeed);
+      const story = storyGen.generate(
+        PuzzleType.SLIDING_BLOCK,
+        this.getDifficultyTitle(difficulty),
+        undefined,
+        `将目标滑块（曹操，2×2）移动到下方出口。最优解需要 ${solution.length} 步。`
+      );
+
       const puzzleData: PuzzleData = {
-        id: `klotski_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-        type: PuzzleType.SPATIAL_KLOTSKI,
+        id: `klotski_${actualSeed}_${attempt}`,
+        type: PuzzleType.SLIDING_BLOCK,
         difficulty,
-        title: this.getDifficultyTitle(difficulty),
-        description: `华容道经典谜题 —— 将曹操（2×2）移动到出口位置。最优解需要 ${solution.length} 步。`,
+        title: story.title,
+        description: story.scenario,
         initial_state: initialModel.getState(),
         goal_state: goalState.getState(),
         hints,
-        seed: Math.floor(Math.random() * 2147483647),
+        seed: actualSeed,
       };
 
       return puzzleData;
     }
 
-    throw new Error(
-      `华容道谜题生成失败：在 ${MAX_GENERATION_ATTEMPTS} 次尝试后未能生成难度 ${difficulty} 的合格谜题。`
-    );
+    // Return null instead of throwing — let the caller retry or skip
+    return null;
   }
 
   // ─── 难度参数 ──────────────────────────────────────────────
@@ -184,16 +206,23 @@ export class KlotskiEngine {
   /**
    * 根据难度等级返回生成参数。
    *
+   * 经典 4×5 十方块华容道的最优解理论上限约 81 步。
+   * 难度映射基于实际可达的最优解步数区间。
+   *
    * @param difficulty - 1-10 的难度等级
    * @returns 反向步数范围和目标解步数范围
    */
   private getDifficultyParams(difficulty: number): DifficultyParams {
-    if (difficulty <= 3) {
-      return { reverseStepsMin: 15, reverseStepsMax: 25, minSteps: 5, maxSteps: 25 };
+    if (difficulty <= 2) {
+      return { reverseStepsMin: 30, reverseStepsMax: 60, minSteps: 3, maxSteps: 12 };
+    } else if (difficulty <= 4) {
+      return { reverseStepsMin: 80, reverseStepsMax: 150, minSteps: 10, maxSteps: 25 };
     } else if (difficulty <= 6) {
-      return { reverseStepsMin: 30, reverseStepsMax: 50, minSteps: 15, maxSteps: 50 };
+      return { reverseStepsMin: 200, reverseStepsMax: 400, minSteps: 15, maxSteps: 35 };
+    } else if (difficulty <= 8) {
+      return { reverseStepsMin: 500, reverseStepsMax: 900, minSteps: 25, maxSteps: 55 };
     } else {
-      return { reverseStepsMin: 60, reverseStepsMax: 100, minSteps: 30, maxSteps: 120 };
+      return { reverseStepsMin: 800, reverseStepsMax: 1500, minSteps: 40, maxSteps: 81 };
     }
   }
 
@@ -201,9 +230,11 @@ export class KlotskiEngine {
    * 根据难度等级返回谜题标题。
    */
   private getDifficultyTitle(difficulty: number): string {
-    if (difficulty <= 3) return '华容道 · 初出茅庐';
+    if (difficulty <= 2) return '华容道 · 初出茅庐';
+    if (difficulty <= 4) return '华容道 · 渐入佳境';
     if (difficulty <= 6) return '华容道 · 过关斩将';
-    return '华容道 · 千里走单骑';
+    if (difficulty <= 8) return '华容道 · 千里走单骑';
+    return '华容道 · 究极挑战';
   }
 
   // ─── 目标状态构建 ─────────────────────────────────────────
@@ -242,7 +273,7 @@ export class KlotskiEngine {
 
     // 其余方块随机放置（使用回溯）
     const remainingDefs = CLASSIC_BLOCK_DEFS.slice(1);
-    const shuffledDefs = this.shuffleArray([...remainingDefs]);
+    const shuffledDefs = this.rng.shuffle([...remainingDefs]);
 
     const success = this.placeBlocksBacktrack(grid, shuffledDefs, 0, placedBlocks);
     if (!success) return null;
@@ -286,7 +317,7 @@ export class KlotskiEngine {
         }
       }
     }
-    this.shuffleArray(positions);
+    this.rng.shuffle(positions);
 
     for (const pos of positions) {
       // 放置
@@ -369,7 +400,7 @@ export class KlotskiEngine {
       const candidates = filteredMoves.length > 0 ? filteredMoves : allMoves;
       if (candidates.length === 0) break;
 
-      const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+      const chosen = candidates[Math.floor(this.rng.next() * candidates.length)];
       model.moveBlock(chosen.blockId, chosen.direction);
       lastBlockId = chosen.blockId;
       lastDirection = chosen.direction;
@@ -378,84 +409,113 @@ export class KlotskiEngine {
     return model;
   }
 
-  // ─── A* 求解器 ─────────────────────────────────────────────
+  // ─── BFS 求解器 ─────────────────────────────────────────────
 
   /**
-   * 使用 A* 算法从给定初始状态搜索到目标状态（曹操在出口）的最短路径。
+   * 使用 BFS（广度优先搜索）从初始状态搜索到目标状态的最短路径。
+   *
+   * 经典 4×5 十方块华容道的状态空间约 65K 个可达状态，
+   * BFS 可在 1 秒内穷举完毕，保证找到最优解。
+   * 相比 IDA-star 和 A-star，BFS 不依赖启发式质量，更稳定。
    *
    * @param initialModel - 初始状态模型
    * @returns 解路径（移动列表），无解或超时返回 null
    */
-  private aStarSolve(
+  private bfsSolve(
     initialModel: KlotskiModel
   ): Array<{ blockId: string; direction: Direction }> | null {
     const startModel = initialModel.clone();
-    const startH = this.heuristic(startModel);
 
-    const openHeap = new MinHeap();
-    const visited = new Set<string>();
+    if (startModel.checkWin()) return [];
 
-    const startNode: AStarNode = {
-      model: startModel,
-      g: 0,
-      h: startH,
-      f: startH,
-      path: [],
-    };
+    const startKey = startModel.serialize();
+    const visited = new Set<string>([startKey]);
 
-    openHeap.push(startNode);
-    visited.add(startModel.serialize());
+    // 队列元素：[模型, 路径]
+    interface QueueItem {
+      model: KlotskiModel;
+      path: Array<{ blockId: string; direction: Direction }>;
+    }
 
+    const queue: QueueItem[] = [{ model: startModel, path: [] }];
+    const startTime = Date.now();
+    const MAX_TIME_MS = 3000;
     let nodesExplored = 0;
 
-    while (openHeap.size > 0 && nodesExplored < MAX_ASTAR_NODES) {
-      const current = openHeap.pop()!;
+    while (queue.length > 0) {
+      if (Date.now() - startTime > MAX_TIME_MS) return null;
+
+      const current = queue.shift()!;
       nodesExplored++;
 
-      // 目标检测
-      if (current.model.checkWin()) {
-        return current.path;
-      }
-
-      // 展开所有合法后继状态
       const moves = current.model.getAllValidMoves();
 
       for (const move of moves) {
         const nextModel = current.model.clone();
         nextModel.moveBlock(move.blockId, move.direction);
 
-        const serialized = nextModel.serialize();
-        if (visited.has(serialized)) continue;
-        visited.add(serialized);
+        const key = nextModel.serialize();
+        if (visited.has(key)) continue;
+        visited.add(key);
 
-        const g = current.g + 1;
-        const h = this.heuristic(nextModel);
-        const nextNode: AStarNode = {
-          model: nextModel,
-          g,
-          h,
-          f: g + h,
-          path: [...current.path, { blockId: move.blockId, direction: move.direction }],
-        };
+        const newPath = [...current.path, { blockId: move.blockId, direction: move.direction }];
 
-        openHeap.push(nextNode);
+        if (nextModel.checkWin()) {
+          return newPath;
+        }
+
+        queue.push({ model: nextModel, path: newPath });
       }
     }
 
-    // 搜索失败（无解或超过节点上限）
     return null;
   }
 
   /**
-   * A* 启发式函数：目标方块到出口位置的曼哈顿距离。
+   * 启发式函数：目标方块到出口的曼哈顿距离 + 路径上的障碍物惩罚。
+   *
+   * 纯曼哈顿距离过于乐观（admissible 但信息量低），导致 IDA* 展开
+   * 大量无效节点。加入路径障碍惩罚后仍保持 admissible（每个障碍
+   * 至少需要 1 步移开），但大幅缩小搜索树。
    *
    * @param model - 当前棋盘状态
-   * @returns 曼哈顿距离估计值
+   * @returns 估计的最低剩余步数
    */
   private heuristic(model: KlotskiModel): number {
     const target = model.blocks.find(b => b.isTarget);
     if (!target) return Infinity;
-    return Math.abs(target.x - model.exitX) + Math.abs(target.y - model.exitY);
+
+    const dx = Math.abs(target.x - model.exitX);
+    const dy = Math.abs(target.y - model.exitY);
+    let h = dx + dy;
+
+    // 检查目标方块到出口路径上是否被其他方块阻挡
+    // 水平路径
+    const xMin = Math.min(target.x, model.exitX);
+    const xMax = Math.max(target.x, model.exitX);
+    for (let x = xMin; x <= xMax; x++) {
+      for (let ty = target.y; ty < target.y + target.height; ty++) {
+        const block = model.getBlockAt(x, ty);
+        if (block && !block.isTarget) {
+          h += 1;
+          break;
+        }
+      }
+    }
+    // 垂直路径
+    const yMin = Math.min(target.y, model.exitY);
+    const yMax = Math.max(target.y, model.exitY);
+    for (let y = yMin; y <= yMax; y++) {
+      for (let tx = target.x; tx < target.x + target.width; tx++) {
+        const block = model.getBlockAt(tx, y);
+        if (block && !block.isTarget) {
+          h += 1;
+          break;
+        }
+      }
+    }
+
+    return h;
   }
 
   // ─── 提示生成 ──────────────────────────────────────────────
@@ -528,17 +588,6 @@ export class KlotskiEngine {
    * 生成 [min, max] 范围内的随机整数（含两端）。
    */
   private randomInt(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  /**
-   * Fisher-Yates 洗牌算法，原地打乱数组并返回。
-   */
-  private shuffleArray<T>(arr: T[]): T[] {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
+    return this.rng.nextInt(min, max);
   }
 }
