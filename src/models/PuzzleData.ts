@@ -68,12 +68,42 @@ export interface PuzzleEngine {
 
 // ─── 标准化谜题数据 ─────────────────────────────────────────
 
+export interface VisualElement {
+  type: 'character' | 'prop' | 'background';
+  id: string;      // 例如 'knight', 'red_potion', 'locked_door'
+  position: any;   // 根据具体题型映射 (如 grid 坐标, 相对位置)
+  state: any;      // 元素当前状态 (如 'happy', 'empty', 'open')
+}
+
+export interface AssetSprite {
+  id: string;          // 必须与 VisualElement 的 id 匹配
+  url: string;         // 自动裁剪后得到的透明图 URL
+  width?: number;
+  height?: number;
+}
+
+export interface AssetManifest {
+  background_url: string; // 由 AI 自动化生成的场景底图
+  sprites: AssetSprite[]; // AI 生成的零碎切图
+}
+
 export interface PuzzleData {
   id: string;
   type: PuzzleType;
   difficulty: number;       // 1-5 (bank) or 1-10 (PCG)
   title: string;
-  description: string;      // scenario / context
+  
+  // -- 叙事与视觉层 (Layer 2) --
+  scene_theme?: string;              // e.g., "古堡密室", "街头奇遇"
+  narrative_setup?: string;          // 简短叙事，1-2 句，Layton 式风趣+悬念
+  visual_elements?: VisualElement[]; // 故事元素映射
+  integrated_hints?: string[];       // 视觉化提示
+  
+  // -- 新增：物理资产层 (Layer 3) --
+  assets?: AssetManifest;
+  
+  // -- 原有：机制层 (Layer 1) --
+  description: string;      // scenario / context / 机制说明
   initial_state: unknown;
   goal_state: unknown;
   hints: string[];
