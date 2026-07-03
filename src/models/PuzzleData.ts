@@ -26,11 +26,33 @@ export enum PuzzleType {
 export const PUZZLE_TYPE_LABELS: Record<string, string> = {
   [PuzzleType.SLIDING_BLOCK]: '滑动解谜',
   [PuzzleType.LOGIC_GRID]: '逻辑网格',
-  [PuzzleType.PATH_FINDING]: '一笔画'
+  [PuzzleType.PATH_FINDING]: '一笔画',
+  [PuzzleType.NUMBER_GRID]: '数字网格',
+  [PuzzleType.JIGSAW]: '拼图挑战',
+  [PuzzleType.MATH]: '数学推理',
+  [PuzzleType.MATCHSTICK]: '火柴棒',
+  [PuzzleType.WEIGHING]: '天平称重',
+  [PuzzleType.RIVER_CROSSING]: '过河问题',
+  [PuzzleType.LATERAL_THINKING]: '侧向思维',
+  [PuzzleType.WORD_PLAY]: '文字游戏',
+  [PuzzleType.MEASUREMENT]: '度量与分配',
 };
 
 export function getCategoriesForDifficulty(difficulty: number): PuzzleType[] {
-  return [PuzzleType.SLIDING_BLOCK, PuzzleType.LOGIC_GRID];
+  return [
+    PuzzleType.SLIDING_BLOCK,
+    PuzzleType.LOGIC_GRID,
+    PuzzleType.PATH_FINDING,
+    PuzzleType.NUMBER_GRID,
+    PuzzleType.JIGSAW,
+    PuzzleType.MATH,
+    PuzzleType.MATCHSTICK,
+    PuzzleType.WEIGHING,
+    PuzzleType.RIVER_CROSSING,
+    PuzzleType.LATERAL_THINKING,
+    PuzzleType.WORD_PLAY,
+    PuzzleType.MEASUREMENT
+  ];
 }
 
 export enum PuzzleMechanic {

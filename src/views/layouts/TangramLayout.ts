@@ -105,7 +105,7 @@ export class TangramLayout implements IPuzzleLayout {
       ';font-family:var(--font-serif);';
 
     const titleEl = document.createElement('span');
-    titleEl.textContent = params.puzzle.title;
+    titleEl.textContent = params.puzzle.title || '';
     Object.assign(titleEl.style, {
       fontSize: '0.85rem', fontWeight: '700', color: C.ink,
       fontFamily: 'var(--font-serif)', textAlign: 'center', flex: '1',

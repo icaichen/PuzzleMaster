@@ -2,7 +2,7 @@ import { IPuzzleLayout, PuzzleLayoutCallbacks, PuzzleRenderParams } from './IPuz
 import { createPuzzlePage, createHeader, createButtonRow, createHintPanel, createFeedback, PuzzlePageContainer, ButtonRow, HintPanel } from './SharedComponents';
 import { SlidingBlockView } from '../SlidingBlockView';
 import { SlidingBlockModel } from '../../models/SlidingBlockModel';
-import { SlidingBlockState, Direction } from '../../models/PuzzleData';
+import { SlidingBlockState, Direction, PuzzleType } from '../../models/PuzzleData';
 
 export class SlidingBlockLayout implements IPuzzleLayout {
   private container!: HTMLElement;
@@ -56,10 +56,10 @@ export class SlidingBlockLayout implements IPuzzleLayout {
     const { puzzle, picarat } = params;
     
     // Setup Header & Narrative
-    const header = createHeader(puzzle.type, puzzle.title, picarat);
+    const header = createHeader(puzzle.type || PuzzleType.SLIDING_BLOCK, puzzle.title || '', picarat);
     this.page.el.insertBefore(header, this.page.el.children[1]); // Insert after top ornament
     this.page.setNarrative(puzzle.narrative_setup || '');
-    this.page.setQuestion(puzzle.description); // Layton style scenario text
+    this.page.setQuestion(puzzle.description || ''); // Layton style scenario text
 
     // Setup Hints
     const hints = puzzle.hints || [];

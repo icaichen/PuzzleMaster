@@ -19,6 +19,16 @@ function main(): void {
       manager.startHybridDemo();
     });
   }
+
+  const pills = document.querySelectorAll('.type-pill');
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      const type = pill.getAttribute('data-type') as PuzzleType;
+      if (type) {
+        manager.playSpecificCategory(type);
+      }
+    });
+  });
   
   (window as any).runDemo = () => {
     document.getElementById('home-screen')!.style.display = 'none';
@@ -73,6 +83,41 @@ function main(): void {
     // Use internal loadPuzzle to bypass random generation
     (manager as any).loadPuzzle(manager.currentPuzzle);
   };
+
+  const keyInput = document.getElementById('api-key-input') as HTMLInputElement;
+  const saveBtn = document.getElementById('save-key-btn') as HTMLButtonElement;
+  const statusBadge = document.getElementById('api-status-badge') as HTMLElement;
+
+  const updateStatus = () => {
+    const saved = localStorage.getItem('GEMINI_API_KEY') || '';
+    if (saved) {
+      statusBadge.textContent = '实时联机';
+      statusBadge.className = 'status-badge status-online';
+      keyInput.value = '••••••••••••••••••••••••';
+    } else {
+      statusBadge.textContent = '离线模式';
+      statusBadge.className = 'status-badge status-offline';
+      keyInput.value = '';
+    }
+  };
+
+  if (saveBtn && keyInput) {
+    updateStatus();
+    saveBtn.addEventListener('click', () => {
+      const val = keyInput.value.trim();
+      if (val === '••••••••••••••••••••••••') {
+        return;
+      }
+      if (val) {
+        localStorage.setItem('GEMINI_API_KEY', val);
+        alert('密钥配置已保存！快去体验 AI 联机生成吧！');
+      } else {
+        localStorage.removeItem('GEMINI_API_KEY');
+        alert('配置已清空，回到本地离线模式。');
+      }
+      updateStatus();
+    });
+  }
 }
 
 if (document.readyState === 'loading') {

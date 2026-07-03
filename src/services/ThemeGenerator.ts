@@ -1,9 +1,13 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { ThemeData, PuzzleMechanic } from '../models/PuzzleData';
 
-// Placeholder for API key, in a real app this should be securely managed
-const apiKey = (import.meta as any).env ? (import.meta as any).env.VITE_GEMINI_API_KEY : 'MISSING_API_KEY';
-const ai = new GoogleGenAI({ apiKey: apiKey || 'MISSING_API_KEY' });
+function getAIClient(): GoogleGenAI | null {
+  const key = localStorage.getItem('GEMINI_API_KEY') || (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
+  if (!key || key === 'MISSING_API_KEY') {
+    return null;
+  }
+  return new GoogleGenAI({ apiKey: key });
+}
 
 export class ThemeGenerator {
   
@@ -11,7 +15,8 @@ export class ThemeGenerator {
    * Translates abstract pure math logic into a thematic narrative puzzle using Gemini.
    */
   static async generateSkin(mechanic: PuzzleMechanic, abstractLogic: any): Promise<ThemeData> {
-    if (apiKey === 'MISSING_API_KEY') {
+    const ai = getAIClient();
+    if (!ai) {
       console.warn("No Gemini API key provided. Falling back to static mock skin.");
       return this.getMockSkin(mechanic, abstractLogic);
     }

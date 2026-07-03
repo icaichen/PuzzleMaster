@@ -53,7 +53,7 @@ export class TextPuzzleView {
 
     // Title
     const titleEl = document.createElement('h2');
-    titleEl.textContent = data.title;
+    titleEl.textContent = data.title || '';
     titleEl.style.fontSize = '1.4rem';
     titleEl.style.color = 'var(--gold)';
     titleEl.style.textAlign = 'center';
@@ -63,7 +63,7 @@ export class TextPuzzleView {
 
     // Puzzle Description
     const descEl = document.createElement('p');
-    descEl.textContent = data.description;
+    descEl.textContent = data.description || '';
     descEl.style.fontSize = '1.1rem';
     descEl.style.lineHeight = '1.8';
     descEl.style.color = 'var(--text-primary)';

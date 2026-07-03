@@ -77,6 +77,30 @@ export class GameManager {
     this.loadNextPuzzle();
   }
 
+  async playSpecificCategory(type: PuzzleType): Promise<void> {
+    this.currentMode = 'STORY';
+    this.storyPuzzlesCompleted = 0;
+    this.usedIds.clear();
+    this.showScreen('game-container');
+    
+    const container = document.getElementById('game-container');
+    if (container) {
+      container.innerHTML = '<div style="padding:40px; text-align:center; color:var(--ink); font-family:var(--font-serif);">🧩 正在为您加载谜题，请稍候...</div>';
+    }
+    
+    const difficulty = 5; // Medium difficulty for specific level loading
+    const puzzle = await this.registry.generate(type, difficulty);
+    if (puzzle) {
+      this.currentPuzzle = puzzle;
+      this.currentPuzzleType = puzzle.type ?? null;
+      this.loadPuzzle(puzzle);
+    } else {
+      if (container) {
+        container.innerHTML = '<div style="padding:40px; text-align:center; color:red;">该类别暂未适配生成引擎，返回首页重试。</div>';
+      }
+    }
+  }
+
   async startHybridDemo(): Promise<void> {
     this.currentMode = 'STORY';
     this.showScreen('game-container');
@@ -118,12 +142,12 @@ export class GameManager {
   // ─── Puzzle loading ─────────────────────────────────────
 
   /** Public for navigation */
-  loadNextPuzzle(): void {
+  async loadNextPuzzle(): Promise<void> {
     const difficulty = this.getDifficulty();
 
     // Try up to 20 times to get a non-duplicate puzzle
     for (let attempt = 0; attempt < 20; attempt++) {
-      const puzzle = this.registry.generateRandom(difficulty);
+      const puzzle = await this.registry.generateRandom(difficulty);
       if (!puzzle) continue;
       if (this.usedIds.has(puzzle.id)) continue;
 
@@ -166,7 +190,8 @@ export class GameManager {
       puzzleData.type === PuzzleType.SLIDING_BLOCK ||
       puzzleData.type === PuzzleType.PATH_FINDING || 
       puzzleData.type === PuzzleType.NUMBER_GRID || 
-      puzzleData.type === PuzzleType.JIGSAW
+      puzzleData.type === PuzzleType.JIGSAW ||
+      puzzleData.type === PuzzleType.RIVER_CROSSING
     ) {
       this.loadVisualPuzzle(container, puzzleData);
     } else {
@@ -190,6 +215,8 @@ export class GameManager {
       layout = new NumberGridLayout();
     } else if (puzzleData.type === PuzzleType.SLIDING_BLOCK) {
       layout = new SlidingBlockLayout();
+    } else if (puzzleData.type === PuzzleType.RIVER_CROSSING) {
+      layout = new ConstraintTransferLayout();
     } else {
       layout = new TangramLayout();
     }
