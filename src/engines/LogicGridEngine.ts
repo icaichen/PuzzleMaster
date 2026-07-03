@@ -520,14 +520,13 @@ export class LogicGridEngine implements PuzzleEngine {
             goalState.push(row);
         }
 
-        currentClues.unshift({ description: `【背景设定】${theme.context} (注意维度：【${theme.categories[0].title}】是有隐藏先后顺序的)` } as any);
-
         return {
             id: `logic_grid_${actualSeed}`,
             type: PuzzleType.LOGIC_GRID,
             difficulty: difficulty,
             title: `逻辑网格 · ${theme.categories[0].title}`,
-            description: `根据线索推导出每个${theme.orderedLabel}对应的组合。难度 ${difficulty}。`,
+            description: `根据线索推导出每个${theme.orderedLabel}对应的组合。请利用排查网格逐步推理。`,
+            narrative_setup: theme.context + ` (注意维度：【${theme.categories[0].title}】是有隐藏先后顺序的)`,
             initial_state: {
                 categories: selectedCats,
                 clues: currentClues.map(c => c.description)

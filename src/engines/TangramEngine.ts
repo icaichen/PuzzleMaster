@@ -310,7 +310,8 @@ export class TangramEngine implements PuzzleEngine {
       type: PuzzleType.JIGSAW,
       difficulty,
       title: story.title,
-      description: story.scenario,
+      description: story.question, // description matches layout expected rule/goal text
+      narrative_setup: story.scenario, // narrative_setup matches layout expected background story
       initial_state: state,
       goal_state: { pieces: normalized },
       hints: [

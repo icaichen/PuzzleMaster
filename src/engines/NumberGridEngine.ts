@@ -62,7 +62,8 @@ export class NumberGridEngine implements PuzzleEngine {
       type: PuzzleType.NUMBER_GRID,
       difficulty,
       title: story.title,
-      description: story.scenario,
+      description: story.question, // description matches layout expected rule/goal text
+      narrative_setup: story.scenario, // narrative_setup matches layout expected background story
       initial_state: state,
       goal_state: { solution },
       hints: this.generateHints(difficulty, size),

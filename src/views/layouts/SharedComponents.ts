@@ -37,6 +37,7 @@ export const C = {
 export interface PuzzlePageContainer {
   el: HTMLElement;
   canvasArea: HTMLElement;
+  setNarrative: (text: string) => void;
   setQuestion: (text: string) => void;
 }
 
@@ -89,15 +90,31 @@ export function createPuzzlePage(width: number): PuzzlePageContainer {
   headerRow.appendChild(leftGroup);
   headerRow.appendChild(picEl);
 
-  // ── 问题描述 ──
-  const questionEl = document.createElement('div');
-  Object.assign(questionEl.style, {
-    padding: '8px 16px 6px',
-    fontSize: '0.82rem',
-    lineHeight: '1.65',
+  // ── 故事剧情背景 ──
+  const narrativeBox = document.createElement('div');
+  Object.assign(narrativeBox.style, {
+    padding: '8px 16px',
+    fontSize: '0.8rem',
+    lineHeight: '1.6',
     color: C.inkLight,
     fontFamily: 'var(--font-serif)',
     fontStyle: 'italic',
+    background: C.parchment,
+    borderLeft: '3px solid ' + C.gold,
+    margin: '8px 16px 4px 16px',
+    borderRadius: '2px',
+    display: 'none' // Hidden by default, shown only if text is provided
+  });
+
+  // ── 规则目标描述 ──
+  const questionEl = document.createElement('div');
+  Object.assign(questionEl.style, {
+    padding: '6px 16px 8px',
+    fontSize: '0.85rem',
+    lineHeight: '1.6',
+    color: C.ink,
+    fontFamily: 'var(--font-serif)',
+    fontWeight: '600',
     background: C.parchment,
     borderBottom: '1px solid ' + C.border,
   });
@@ -109,13 +126,24 @@ export function createPuzzlePage(width: number): PuzzlePageContainer {
   // ── 组装 ──
   el.appendChild(topOrnament);
   el.appendChild(headerRow);
+  el.appendChild(narrativeBox);
   el.appendChild(questionEl);
   el.appendChild(canvasArea);
 
   return {
     el,
     canvasArea,
-    setQuestion: (text: string) => { questionEl.textContent = text; },
+    setNarrative: (text: string) => {
+      if (text.trim()) {
+        narrativeBox.textContent = text;
+        narrativeBox.style.display = 'block';
+      } else {
+        narrativeBox.style.display = 'none';
+      }
+    },
+    setQuestion: (text: string) => {
+      questionEl.innerHTML = `<span style="color:${C.accent}; font-weight:700; font-family:var(--font-serif)">✦ 目标：</span>${text}`;
+    },
   };
 }
 

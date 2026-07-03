@@ -107,12 +107,28 @@ export class NumberGridLayout implements IPuzzleLayout {
     this.wrapper.appendChild(header);
 
     // ── 问题描述 ──
+    // ── 故事剧情背景 ──
+    if (params.puzzle.narrative_setup) {
+      const narrativeBox = document.createElement('div');
+      narrativeBox.textContent = params.puzzle.narrative_setup;
+      Object.assign(narrativeBox.style, {
+        padding: '8px 16px',
+        fontSize: '0.8rem', lineHeight: '1.6', color: C.inkLight,
+        fontFamily: 'var(--font-serif)', fontStyle: 'italic',
+        borderLeft: '3px solid ' + C.gold,
+        margin: '8px 16px 4px 16px',
+        borderRadius: '2px',
+      });
+      this.wrapper.appendChild(narrativeBox);
+    }
+
+    // ── 规则目标描述 ──
     const questionEl = document.createElement('div');
-    questionEl.textContent = params.puzzle.description;
+    questionEl.innerHTML = `<span style="color:${C.accent}; font-weight:700; font-family:var(--font-serif)">✦ 目标：</span>${params.puzzle.description}`;
     Object.assign(questionEl.style, {
-      padding: '6px 16px 10px',
-      fontSize: '0.8rem', lineHeight: '1.6', color: C.inkLight,
-      fontFamily: 'var(--font-serif)', fontStyle: 'italic',
+      padding: '6px 16px 8px',
+      fontSize: '0.85rem', lineHeight: '1.6', color: C.ink,
+      fontFamily: 'var(--font-serif)', fontWeight: '600',
       borderBottom: '1px solid ' + C.border,
     });
     this.wrapper.appendChild(questionEl);

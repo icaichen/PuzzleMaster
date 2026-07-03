@@ -10,12 +10,12 @@
 
 import { PuzzleType, PuzzleEngine, PuzzleData, getCategoriesForDifficulty } from './PuzzleData';
 import { SeededRandom } from './SeededRandom';
-import { KlotskiEngine } from '../engines/KlotskiEngine';
+import { SlidingBlockEngine } from '../engines/SlidingBlockEngine';
 import { LogicGridEngine } from '../engines/LogicGridEngine';
 import { TemplateEngine } from '../engines/TemplateEngine';
 import { MatchstickEngine } from '../engines/MatchstickEngine';
 import { WeighingEngine } from '../engines/WeighingEngine';
-import { RiverCrossingEngine } from '../engines/RiverCrossingEngine';
+
 import { PathEngine } from '../engines/PathEngine';
 import { NumberGridEngine } from '../engines/NumberGridEngine';
 import { TangramEngine } from '../engines/TangramEngine';
@@ -50,12 +50,12 @@ export class PuzzleRegistry {
     const bank = new PuzzleBankLoader();
 
     // ─── PCG 引擎 ───────────────────────────────────────
-    this.setPrimary(PuzzleType.SLIDING_BLOCK, new KlotskiEngine());
+    this.setPrimary(PuzzleType.SLIDING_BLOCK, new SlidingBlockEngine());
     this.setPrimary(PuzzleType.LOGIC_GRID, new LogicGridEngine());
     this.setPrimary(PuzzleType.MATH, new TemplateEngine());
     this.setPrimary(PuzzleType.MATCHSTICK, new MatchstickEngine());
     this.setPrimary(PuzzleType.WEIGHING, new WeighingEngine());
-    this.setPrimary(PuzzleType.RIVER_CROSSING, new RiverCrossingEngine());
+
     this.setPrimary(PuzzleType.PATH_FINDING, new PathEngine());
     this.setPrimary(PuzzleType.NUMBER_GRID, new NumberGridEngine());
     this.setPrimary(PuzzleType.JIGSAW, new TangramEngine());
@@ -94,11 +94,11 @@ export class PuzzleRegistry {
     const slot = this.slots.get(type);
     if (!slot) return null;
 
-    const puzzle = slot.primary.generate(difficulty, seed);
+    const puzzle = (slot.primary as any).generate ? (slot.primary as any).generate(difficulty, seed) : null;
     if (puzzle) return puzzle;
 
     if (slot.fallback) {
-      return slot.fallback.generate(difficulty, seed);
+      return (slot.fallback as any).generate ? (slot.fallback as any).generate(difficulty, seed) : null;
     }
 
     return null;

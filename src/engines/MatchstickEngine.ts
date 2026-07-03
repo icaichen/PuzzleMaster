@@ -68,19 +68,18 @@ export class MatchstickEngine implements PuzzleEngine {
       PuzzleType.MATCHSTICK,
       `火柴棒谜题 · ${puzzle.moves === 1 ? '一星' : '二星'}`,
       undefined,
-      `移动 ${puzzle.moves} 根火柴棒，使等式成立：${puzzle.equation}`
+      `移动 ${puzzle.moves} 根火柴棒，使等式成立：\n\n    ${puzzle.equation}\n\n（火柴棒数字按七段数码管显示）`
     );
-
-    const question = `移动 ${puzzle.moves} 根火柴棒，使等式成立：\n\n    ${puzzle.equation}\n\n（火柴棒数字按七段数码管显示）`;
 
     return {
       id: `matchstick_${actualSeed}`,
       type: PuzzleType.MATCHSTICK,
       difficulty: Math.min(10, difficulty + (puzzle.moves - 1) * 3),
       title: story.title,
-      description: story.scenario,
+      description: story.question, // description matches layout expected rule/goal text
+      narrative_setup: story.scenario, // narrative_setup matches layout expected background story
       initial_state: {
-        question,
+        question: story.question,
         equation: puzzle.equation,
         moves: puzzle.moves,
       },

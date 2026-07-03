@@ -3,16 +3,20 @@ import {
   PuzzleType,
   PUZZLE_TYPE_LABELS,
   Direction,
-  KlotskiState,
+  SlidingBlockState,
 } from '../models/PuzzleData';
 import { PuzzleRegistry } from '../models/PuzzleRegistry';
-import { KlotskiModel } from '../models/KlotskiModel';
-import { KlotskiView } from '../views/KlotskiView';
+import { SlidingBlockModel } from '../models/SlidingBlockModel';
+import { SlidingBlockView } from '../views/SlidingBlockView';
 import { PuzzleView } from '../views/PuzzleView';
 import { TangramLayout } from '../views/layouts/TangramLayout';
 import { PathFindingLayout } from '../views/layouts/PathFindingLayout';
 import { NumberGridLayout } from '../views/layouts/NumberGridLayout';
+import { SlidingBlockLayout } from '../views/layouts/SlidingBlockLayout';
+import { ConstraintTransferLayout } from '../views/layouts/ConstraintTransferLayout';
 import type { IPuzzleLayout } from '../views/layouts/IPuzzleLayout';
+import { PuzzleGeneratorService } from '../services/PuzzleGeneratorService';
+import { PuzzleMechanic } from '../models/PuzzleData';
 
 type GameMode = 'HOME' | 'STORY';
 
@@ -23,24 +27,23 @@ export class GameManager {
   private storyPuzzlesCompleted: number;
   private currentPuzzleType: PuzzleType | null = null;
 
-  // Klotski rendering state
-  private klotskiModel: KlotskiModel | null = null;
-  private klotskiView: KlotskiView | null = null;
-  private klotskiSteps: number = 0;
-
   // Text puzzle rendering state
   private puzzleView: PuzzleView | null = null;
   /** Public for screenshot/debug: current puzzle data */
   currentPuzzle: PuzzleData | null = null;
 
   // Visual puzzle rendering state
-  private visualLayout: TangramLayout | PathFindingLayout | NumberGridLayout | null = null;
+  private visualLayout: IPuzzleLayout | null = null;
 
   // Dedup: track used puzzle IDs
+  // Dedup: track used puzzle IDs
   private usedIds: Set<string> = new Set();
+  
+  private puzzleGenService: PuzzleGeneratorService;
 
   constructor() {
     this.registry = new PuzzleRegistry();
+    this.puzzleGenService = new PuzzleGeneratorService();
     this.brainScore = 0;
     this.currentMode = 'HOME';
     this.storyPuzzlesCompleted = 0;
@@ -74,6 +77,44 @@ export class GameManager {
     this.loadNextPuzzle();
   }
 
+  async startHybridDemo(): Promise<void> {
+    this.currentMode = 'STORY';
+    this.showScreen('game-container');
+    const container = document.getElementById('game-container');
+    if (!container) return;
+    
+    container.innerHTML = '<div style="padding:40px; text-align:center; color:white;">🤖 AI 正在为您生成独特的《雷顿教授》风格剧本，请稍候...</div>';
+    
+    try {
+      const puzzle = await this.puzzleGenService.generatePuzzle(PuzzleMechanic.CONSTRAINT_TRANSFER, 4);
+      if (puzzle) {
+        this.currentPuzzle = puzzle;
+        container.innerHTML = ''; // clear loading
+        this.visualLayout?.destroy();
+        
+        const layout = new ConstraintTransferLayout();
+        layout.setCallbacks({
+          onWin: () => {
+             this.showWinOverlay(
+              '✦ 解谜成功！',
+              'AI 动态生成的逻辑非常严密！',
+              '回到首页',
+              () => this.goHome()
+            );
+          },
+          onNext: () => this.goHome()
+        });
+        
+        layout.mount(container);
+        (layout as any).render({ puzzle, picarat: 50 });
+        this.visualLayout = layout;
+      }
+    } catch(e) {
+      console.error(e);
+      container.innerHTML = '<div style="padding:40px; text-align:center; color:red;">生成失败，请检查控制台。</div>';
+    }
+  }
+
   // ─── Puzzle loading ─────────────────────────────────────
 
   /** Public for navigation */
@@ -88,7 +129,7 @@ export class GameManager {
 
       this.usedIds.add(puzzle.id);
       this.currentPuzzle = puzzle;
-      this.currentPuzzleType = puzzle.type;
+      this.currentPuzzleType = puzzle.type ?? null;
       this.loadPuzzle(puzzle);
       return;
     }
@@ -116,68 +157,23 @@ export class GameManager {
     if (!container) return;
 
     container.innerHTML = '';
-    this.klotskiModel = null;
-    this.klotskiView = null;
     this.puzzleView = null;
     this.visualLayout?.destroy();
     this.visualLayout = null;
-    this.klotskiSteps = 0;
 
     // Dispatch to appropriate view
-    if (puzzleData.type === PuzzleType.SLIDING_BLOCK) {
-      this.loadKlotskiPuzzle(container, puzzleData);
-    } else if (puzzleData.type === PuzzleType.PATH_FINDING || puzzleData.type === PuzzleType.NUMBER_GRID || puzzleData.type === PuzzleType.JIGSAW) {
+    if (
+      puzzleData.type === PuzzleType.SLIDING_BLOCK ||
+      puzzleData.type === PuzzleType.PATH_FINDING || 
+      puzzleData.type === PuzzleType.NUMBER_GRID || 
+      puzzleData.type === PuzzleType.JIGSAW
+    ) {
       this.loadVisualPuzzle(container, puzzleData);
     } else {
       this.loadTextPuzzle(container, puzzleData);
     }
 
     this.updateProgressDisplay();
-  }
-
-  // ─── Sliding block (canvas) ─────────────────────────────
-
-  private loadKlotskiPuzzle(container: HTMLElement, puzzleData: PuzzleData): void {
-    const canvas = document.createElement('canvas');
-    canvas.id = 'game-canvas';
-    container.appendChild(canvas);
-
-    const initialState = puzzleData.initial_state as KlotskiState;
-    this.klotskiModel = new KlotskiModel(initialState);
-    this.klotskiView = new KlotskiView(canvas, this.klotskiModel, puzzleData.assets, puzzleData.visual_elements);
-
-    this.klotskiView.onBlockMove = (blockId: string, direction: Direction) => {
-      this.handleKlotskiMove(blockId, direction);
-    };
-
-    this.updateStepDisplay(true);
-  }
-
-  private handleKlotskiMove(blockId: string, direction: Direction): void {
-    if (!this.klotskiModel || !this.klotskiView) return;
-
-    const block = this.klotskiModel.getBlockById(blockId);
-    if (!block) return;
-    const prevX = block.x;
-    const prevY = block.y;
-
-    const moved = this.klotskiModel.moveBlock(blockId, direction);
-    if (!moved) return;
-
-    this.klotskiSteps++;
-    this.updateStepDisplay(true);
-    this.klotskiView.animateMove(blockId, prevX, prevY, block.x, block.y);
-
-    if (this.klotskiModel.checkWin()) {
-      this.handleKlotskiWin();
-    }
-  }
-
-  private handleKlotskiWin(): void {
-    if (this.klotskiView) this.klotskiView.showWin();
-    this.brainScore += 10;
-    this.storyPuzzlesCompleted++;
-    this.handlePuzzleSolved();
   }
 
   // ─── Visual puzzle (Canvas) ─────────────────────────────
@@ -192,6 +188,8 @@ export class GameManager {
       layout = new PathFindingLayout();
     } else if (puzzleData.type === PuzzleType.NUMBER_GRID) {
       layout = new NumberGridLayout();
+    } else if (puzzleData.type === PuzzleType.SLIDING_BLOCK) {
+      layout = new SlidingBlockLayout();
     } else {
       layout = new TangramLayout();
     }
@@ -214,9 +212,10 @@ export class GameManager {
 
     layout.mount(container);
     (layout as any).render({ puzzle: puzzleData, picarat });
-    this.visualLayout = layout as any;
-    this.updateStepDisplay(false);
+    this.visualLayout = layout;
   }
+
+
 
   // ─── Text puzzle ────────────────────────────────────────
 
@@ -225,13 +224,13 @@ export class GameManager {
 
     this.puzzleView = new PuzzleView(container);
     this.puzzleView.setPuzzle({
-      title: puzzleData.title,
-      scenario: puzzleData.description,
-      question: state.question ?? puzzleData.description,
+      title: puzzleData.title || '',
+      scenario: puzzleData.description || '',
+      question: state.question ?? (puzzleData.description || ''),
       answer: (puzzleData.goal_state as any).answer ?? '',
       hints: puzzleData.hints,
       picarat: state.picarat ?? this.difficultyToPicarat(puzzleData.difficulty),
-      category: PUZZLE_TYPE_LABELS[puzzleData.type] || state.category || 'unknown',
+      category: (puzzleData.type ? PUZZLE_TYPE_LABELS[puzzleData.type] : '') || state.category || 'unknown',
     });
 
     this.puzzleView.onWin(() => {
@@ -250,7 +249,6 @@ export class GameManager {
     });
 
     this.puzzleView.render();
-    this.updateStepDisplay(false);
   }
 
   // ─── Shared puzzle-solved handling ──────────────────────
@@ -265,7 +263,7 @@ export class GameManager {
 
     this.updateProgressDisplay();
 
-    const typeLabel = puzzle
+    const typeLabel = (puzzle && puzzle.type)
       ? PUZZLE_TYPE_LABELS[puzzle.type] || ''
       : '';
 
@@ -313,17 +311,6 @@ export class GameManager {
           onAction();
         });
       }
-    }
-  }
-
-  private updateStepDisplay(show: boolean): void {
-    const el = document.getElementById('step-count');
-    if (!el) return;
-    if (show) {
-      el.style.display = 'block';
-      el.textContent = '步数: ' + this.klotskiSteps;
-    } else {
-      el.style.display = 'none';
     }
   }
 

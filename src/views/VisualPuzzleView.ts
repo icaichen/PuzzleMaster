@@ -514,7 +514,8 @@ export class VisualPuzzleView {
          }
       }
 
-      this.sceneRenderer.draw(ctx, w, h, elements);
+      this.sceneRenderer.drawBackground(ctx, w, h);
+      this.sceneRenderer.drawSprites(ctx, elements);
       
       // Draw UI overlay (Header text, etc)
       ctx.fillStyle = 'rgba(0,0,0,0.5)';

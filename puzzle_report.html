@@ -1,0 +1,2480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Puzzle Generation Report</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; }
+        h1 { text-align: center; color: #e74c3c; }
+        .engine-section { margin-bottom: 50px; border-top: 3px solid #e74c3c; padding-top: 20px; }
+        .puzzle-card { background: #2a2a4a; margin: 15px 0; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .puzzle-card h3 { margin-top: 0; color: #f1c40f; }
+        .difficulty { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.8em; margin-left: 10px; background: #34495e; }
+        .diff-2 { background: #27ae60; }
+        .diff-5 { background: #d35400; }
+        .diff-8 { background: #c0392b; }
+        pre { background: #111; padding: 10px; border-radius: 4px; overflow-x: auto; font-size: 0.9em; white-space: pre-wrap; }
+        .section-title { font-weight: bold; color: #3498db; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Puzzle Generation Structure Report</h1>
+    <p style="text-align:center">This report shows the pure JSON structure of the generated puzzles across all categories and difficulties.</p>
+<div class="engine-section"><h2>⚙️ Category: LOGIC_GRID</h2>
+            <div class="puzzle-card">
+                <h3>逻辑网格 · 展厅 <span class="difficulty diff-2">Easy (Lv 2)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>博物馆的五个展厅按参观路线排列，每个展厅展出不同朝代的文物，由不同赞助人资助，配有不同的安保等级。 (注意维度：【展厅】是有隐藏先后顺序的)</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>根据线索推导出每个参观顺序对应的组合。请利用排查网格逐步推理。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "categories": [
+    {
+      "id": "hall",
+      "title": "展厅",
+      "items": [
+        "第一厅",
+        "第二厅",
+        "第三厅"
+      ]
+    },
+    {
+      "id": "dynasty",
+      "title": "朝代",
+      "items": [
+        "商周",
+        "清代",
+        "秦汉"
+      ]
+    },
+    {
+      "id": "sponsor",
+      "title": "赞助人",
+      "items": [
+        "大学研究院",
+        "海外华侨会",
+        "陈氏基金会"
+      ]
+    }
+  ],
+  "clues": [
+    "展览手册标注，【第一厅】和【秦汉】在同一个展厅。",
+    "【第一厅】和【清代】的展厅是相邻的。",
+    "【第一厅】所在的展厅同时展出了【陈氏基金会】。",
+    "【第一厅】和【海外华侨会】的展厅是相邻的。"
+  ]
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "truth": [
+    {
+      "hall": "第一厅",
+      "dynasty": "秦汉",
+      "sponsor": "陈氏基金会"
+    },
+    {
+      "hall": "第二厅",
+      "dynasty": "清代",
+      "sponsor": "海外华侨会"
+    },
+    {
+      "hall": "第三厅",
+      "dynasty": "商周",
+      "sponsor": "大学研究院"
+    }
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：从涉及【参观顺序】最少的线索开始推理。
+提示二：利用排除法，每确定一个关联就能排除其他可能性。
+提示三：注意【参观顺序】是有先后顺序的维度。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>逻辑网格 · 门牌 <span class="difficulty diff-5">Medium (Lv 5)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>美食街上五家餐厅按门牌号排列，每家经营不同菜系，由不同主厨掌勺，有不同的招牌菜和不同的装修风格。 (注意维度：【门牌】是有隐藏先后顺序的)</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>根据线索推导出每个门牌号对应的组合。请利用排查网格逐步推理。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "categories": [
+    {
+      "id": "number",
+      "title": "门牌",
+      "items": [
+        "1号",
+        "2号",
+        "3号",
+        "4号"
+      ]
+    },
+    {
+      "id": "cuisine",
+      "title": "菜系",
+      "items": [
+        "日料",
+        "意大利菜",
+        "粤菜",
+        "川菜"
+      ]
+    },
+    {
+      "id": "chef",
+      "title": "主厨",
+      "items": [
+        "酱料皮埃尔",
+        "蒸师傅阿德",
+        "辣王老李",
+        "面点马可"
+      ]
+    }
+  ],
+  "clues": [
+    "【1号】所在的餐厅同时以【川菜】为特色。",
+    "【1号】的店旁边就是卖【日料】的店。",
+    "【2号】的店旁边就是卖【意大利菜】的店。",
+    "美食攻略上写着，【1号】和【酱料皮埃尔】属于同一家店。",
+    "【1号】和【面点马可】的餐厅是隔壁邻居。",
+    "【2号】和【蒸师傅阿德】的餐厅是隔壁邻居。"
+  ]
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "truth": [
+    {
+      "number": "1号",
+      "cuisine": "川菜",
+      "chef": "酱料皮埃尔"
+    },
+    {
+      "number": "2号",
+      "cuisine": "日料",
+      "chef": "面点马可"
+    },
+    {
+      "number": "3号",
+      "cuisine": "意大利菜",
+      "chef": "蒸师傅阿德"
+    },
+    {
+      "number": "4号",
+      "cuisine": "粤菜",
+      "chef": "辣王老李"
+    }
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：从涉及【门牌号】最少的线索开始推理。
+提示二：利用排除法，每确定一个关联就能排除其他可能性。
+提示三：注意【门牌号】是有先后顺序的维度。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>逻辑网格 · 区域 <span class="difficulty diff-8">Hard (Lv 8)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>皇家花园的五个区域按游览路径排列，每个区域种着不同花卉，由不同园丁打理，配有不同的景观装饰。 (注意维度：【区域】是有隐藏先后顺序的)</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>根据线索推导出每个游览顺序对应的组合。请利用排查网格逐步推理。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "categories": [
+    {
+      "id": "zone",
+      "title": "区域",
+      "items": [
+        "入口区",
+        "东侧区",
+        "中心区",
+        "西侧区"
+      ]
+    },
+    {
+      "id": "flower",
+      "title": "花卉",
+      "items": [
+        "梅花",
+        "荷花",
+        "樱花",
+        "牡丹"
+      ]
+    },
+    {
+      "id": "gardener",
+      "title": "园丁",
+      "items": [
+        "老赵",
+        "老陈",
+        "阿梅",
+        "花姐"
+      ]
+    },
+    {
+      "id": "decor",
+      "title": "景观",
+      "items": [
+        "假山",
+        "回廊",
+        "石桥",
+        "凉亭"
+      ]
+    }
+  ],
+  "clues": [
+    "种植【入口区】的区域也设有【牡丹】。",
+    "【入口区】的区域旁边就是【荷花】的区域。",
+    "【东侧区】的区域旁边就是【梅花】的区域。",
+    "种植【入口区】的区域也设有【阿梅】。",
+    "【入口区】的区域旁边就是【花姐】的区域。",
+    "【东侧区】和【老陈】的区域是相邻的。",
+    "种植【入口区】的区域也设有【假山】。",
+    "【入口区】和【回廊】的区域是相邻的。",
+    "【东侧区】和【石桥】的区域是相邻的。"
+  ]
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "truth": [
+    {
+      "zone": "入口区",
+      "flower": "牡丹",
+      "gardener": "阿梅",
+      "decor": "假山"
+    },
+    {
+      "zone": "东侧区",
+      "flower": "荷花",
+      "gardener": "花姐",
+      "decor": "回廊"
+    },
+    {
+      "zone": "中心区",
+      "flower": "梅花",
+      "gardener": "老陈",
+      "decor": "石桥"
+    },
+    {
+      "zone": "西侧区",
+      "flower": "樱花",
+      "gardener": "老赵",
+      "decor": "凉亭"
+    }
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：从涉及【游览顺序】最少的线索开始推理。
+提示二：利用排除法，每确定一个关联就能排除其他可能性。
+提示三：注意【游览顺序】是有先后顺序的维度。</pre>
+            </div></div><div class="engine-section"><h2>⚙️ Category: MATCHSTICK</h2>
+            <div class="puzzle-card">
+                <h3>火柴棒谜题 · 一星 <span class="difficulty diff-2">Easy (Lv 2)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>酒馆里，一个水手用火柴摆出了一个等式。 "这个等式是错的"，他说，"但移动一根火柴就能让它成立。"</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>移动 1 根火柴棒，使等式成立：
+
+    6 + 4 = 4
+
+（火柴棒数字按七段数码管显示）</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "移动 1 根火柴棒，使等式成立：\n\n    6 + 4 = 4\n\n（火柴棒数字按七段数码管显示）",
+  "equation": "6 + 4 = 4",
+  "moves": 1
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "0 + 4 = 4"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：注意观察哪些数字只需要改变一根火柴棒就能变成另一个数字。
+提示二：把 6 变成 0
+提示三：正确答案是 0 + 4 = 4。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>火柴棒谜题 · 一星 <span class="difficulty diff-5">Medium (Lv 5)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>孩子们在地上用树枝摆出了算式。 一阵风吹乱了其中一根——奇妙的是，乱掉的算式看起来还是错的。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>移动 1 根火柴棒，使等式成立：
+
+    4 + 2 = 7
+
+（火柴棒数字按七段数码管显示）</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "移动 1 根火柴棒，使等式成立：\n\n    4 + 2 = 7\n\n（火柴棒数字按七段数码管显示）",
+  "equation": "4 + 2 = 7",
+  "moves": 1
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "4 + 3 = 7"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：注意观察哪些数字只需要改变一根火柴棒就能变成另一个数字。
+提示二：把 2 变成 3
+提示三：正确答案是 4 + 3 = 7。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>火柴棒谜题 · 二星 <span class="difficulty diff-8">Hard (Lv 8)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>酒馆里，一个水手用火柴摆出了一个等式。 "这个等式是错的"，他说，"但移动一根火柴就能让它成立。"</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>移动 2 根火柴棒，使等式成立：
+
+    6 - 4 = 3
+
+（火柴棒数字按七段数码管显示）</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "移动 2 根火柴棒，使等式成立：\n\n    6 - 4 = 3\n\n（火柴棒数字按七段数码管显示）",
+  "equation": "6 - 4 = 3",
+  "moves": 2
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "6 - 4 = 2"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：注意观察哪些数字只需要改变一根火柴棒就能变成另一个数字。
+提示二：重新排列 3 变成 2
+提示三：正确答案是 6 - 4 = 2。</pre>
+            </div></div><div class="engine-section"><h2>⚙️ Category: NUMBER_GRID</h2>
+            <div class="puzzle-card">
+                <h3>不等号数独 <span class="difficulty diff-2">Easy (Lv 2)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>甜品大赛上，评委给六块蛋糕打分。 分数卡被撕碎了，只留下部分数字和比较箭头。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>在 3×3 的网格中填入数字 1~3，使每行每列不重复，并满足所有 > < 约束。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "size": 3,
+  "grid": [
+    [
+      0,
+      0,
+      3
+    ],
+    [
+      0,
+      0,
+      1
+    ],
+    [
+      1,
+      3,
+      2
+    ]
+  ],
+  "solution": [
+    [
+      2,
+      1,
+      3
+    ],
+    [
+      3,
+      2,
+      1
+    ],
+    [
+      1,
+      3,
+      2
+    ]
+  ],
+  "constraints": [
+    [
+      2,
+      0,
+      2,
+      1
+    ],
+    [
+      1,
+      1,
+      2,
+      1
+    ],
+    [
+      1,
+      2,
+      2,
+      2
+    ]
+  ]
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "solution": [
+    [
+      2,
+      1,
+      3
+    ],
+    [
+      3,
+      2,
+      1
+    ],
+    [
+      1,
+      3,
+      2
+    ]
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>每行每列填入 1~3 各一次。关注不等号方向，它告诉你两个格子的相对大小。
+先确定最大/最小的数字位置。如果一行中某个位置比周围都大，那它很可能是 3。
+用排除法：如果一个数字在某行/某列只剩下一个可能的位置，直接填入。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>不等号数独 <span class="difficulty diff-5">Medium (Lv 5)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>图书馆的古籍里夹着一页奇怪的数字网格。 一些格子是空的，格子之间标注了大小关系符号。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>在 4×4 的网格中填入数字 1~4，使每行每列不重复，并满足所有 > < 约束。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "size": 4,
+  "grid": [
+    [
+      1,
+      3,
+      4,
+      2
+    ],
+    [
+      4,
+      2,
+      0,
+      0
+    ],
+    [
+      0,
+      4,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0
+    ]
+  ],
+  "solution": [
+    [
+      1,
+      3,
+      4,
+      2
+    ],
+    [
+      4,
+      2,
+      3,
+      1
+    ],
+    [
+      2,
+      4,
+      1,
+      3
+    ],
+    [
+      3,
+      1,
+      2,
+      4
+    ]
+  ],
+  "constraints": [
+    [
+      2,
+      2,
+      2,
+      3
+    ],
+    [
+      1,
+      1,
+      1,
+      0
+    ],
+    [
+      3,
+      1,
+      2,
+      1
+    ],
+    [
+      1,
+      1,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      2,
+      0,
+      1,
+      0
+    ],
+    [
+      3,
+      2,
+      3,
+      3
+    ],
+    [
+      0,
+      1,
+      0,
+      2
+    ],
+    [
+      1,
+      3,
+      2,
+      3
+    ]
+  ]
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "solution": [
+    [
+      1,
+      3,
+      4,
+      2
+    ],
+    [
+      4,
+      2,
+      3,
+      1
+    ],
+    [
+      2,
+      4,
+      1,
+      3
+    ],
+    [
+      3,
+      1,
+      2,
+      4
+    ]
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>每行每列填入 1~4 各一次。关注不等号方向，它告诉你两个格子的相对大小。
+先确定最大/最小的数字位置。如果一行中某个位置比周围都大，那它很可能是 4。
+用排除法：如果一个数字在某行/某列只剩下一个可能的位置，直接填入。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>不等号数独 <span class="difficulty diff-8">Hard (Lv 8)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>图书馆的古籍里夹着一页奇怪的数字网格。 一些格子是空的，格子之间标注了大小关系符号。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>在 5×5 的网格中填入数字 1~5，使每行每列不重复，并满足所有 > < 约束。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "size": 5,
+  "grid": [
+    [
+      3,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      5,
+      0,
+      1,
+      3
+    ],
+    [
+      0,
+      0,
+      2,
+      5,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      4,
+      1,
+      0,
+      0
+    ]
+  ],
+  "solution": [
+    [
+      3,
+      2,
+      5,
+      4,
+      1
+    ],
+    [
+      2,
+      5,
+      4,
+      1,
+      3
+    ],
+    [
+      1,
+      3,
+      2,
+      5,
+      4
+    ],
+    [
+      4,
+      1,
+      3,
+      2,
+      5
+    ],
+    [
+      5,
+      4,
+      1,
+      3,
+      2
+    ]
+  ],
+  "constraints": [
+    [
+      4,
+      2,
+      4,
+      1
+    ],
+    [
+      3,
+      1,
+      3,
+      2
+    ],
+    [
+      2,
+      2,
+      1,
+      2
+    ],
+    [
+      3,
+      0,
+      4,
+      0
+    ],
+    [
+      4,
+      4,
+      4,
+      3
+    ],
+    [
+      4,
+      4,
+      3,
+      4
+    ],
+    [
+      1,
+      4,
+      2,
+      4
+    ],
+    [
+      1,
+      3,
+      2,
+      3
+    ],
+    [
+      2,
+      0,
+      3,
+      0
+    ],
+    [
+      1,
+      3,
+      0,
+      3
+    ],
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      2,
+      3,
+      2
+    ],
+    [
+      1,
+      3,
+      1,
+      2
+    ],
+    [
+      3,
+      1,
+      3,
+      0
+    ],
+    [
+      1,
+      2,
+      0,
+      2
+    ],
+    [
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      3,
+      3,
+      3,
+      4
+    ],
+    [
+      1,
+      0,
+      1,
+      1
+    ],
+    [
+      3,
+      3,
+      3,
+      2
+    ],
+    [
+      3,
+      3,
+      2,
+      3
+    ],
+    [
+      2,
+      2,
+      2,
+      3
+    ],
+    [
+      2,
+      4,
+      2,
+      3
+    ]
+  ]
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "solution": [
+    [
+      3,
+      2,
+      5,
+      4,
+      1
+    ],
+    [
+      2,
+      5,
+      4,
+      1,
+      3
+    ],
+    [
+      1,
+      3,
+      2,
+      5,
+      4
+    ],
+    [
+      4,
+      1,
+      3,
+      2,
+      5
+    ],
+    [
+      5,
+      4,
+      1,
+      3,
+      2
+    ]
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>每行每列填入 1~5 各一次。关注不等号方向，它告诉你两个格子的相对大小。
+先确定最大/最小的数字位置。如果一行中某个位置比周围都大，那它很可能是 5。
+用排除法：如果一个数字在某行/某列只剩下一个可能的位置，直接填入。</pre>
+            </div></div><div class="engine-section"><h2>⚙️ Category: PATH_FINDING</h2>
+            <div class="puzzle-card">
+                <h3>一笔画路径 <span class="difficulty diff-2">Easy (Lv 2)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>圣诞树上挂着串灯，孩子们要让电流点亮每一盏灯——但线不能交叠。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>在 4×4 的点阵中画一条连续线，访问所有点各一次。起点(S)和终点(E)已标记。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "gridSize": 4,
+  "solutionPath": [
+    1,
+    0,
+    4,
+    8,
+    12,
+    13,
+    9,
+    5,
+    6,
+    10,
+    14,
+    15,
+    11,
+    7,
+    3,
+    2
+  ],
+  "givenEdges": [
+    [
+      1,
+      0
+    ],
+    [
+      8,
+      12
+    ],
+    [
+      12,
+      13
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      10
+    ],
+    [
+      7,
+      3
+    ],
+    [
+      3,
+      2
+    ]
+  ],
+  "startNode": 1,
+  "endNode": 2
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "path": [
+    1,
+    0,
+    4,
+    8,
+    12,
+    13,
+    9,
+    5,
+    6,
+    10,
+    14,
+    15,
+    11,
+    7,
+    3,
+    2
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>从起点出发，每次移动到相邻的（上下左右）点。一共需要访问 16 个点。
+已经画出的线段是正确路径的一部分。从已有的线段出发，逐步扩展到相邻的未访问点。
+尝试从两端（起点和终点）同时向中间推进。如果某一步走进死胡同，检查是否有其他分支可以走。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>一笔画路径 <span class="difficulty diff-5">Medium (Lv 5)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>圣诞树上挂着串灯，孩子们要让电流点亮每一盏灯——但线不能交叠。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>在 5×5 的点阵中画一条连续线，访问所有点各一次。起点(S)和终点(E)已标记。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "gridSize": 5,
+  "solutionPath": [
+    22,
+    23,
+    24,
+    19,
+    14,
+    13,
+    8,
+    9,
+    4,
+    3,
+    2,
+    7,
+    6,
+    1,
+    0,
+    5,
+    10,
+    15,
+    20,
+    21,
+    16,
+    11,
+    12,
+    17,
+    18
+  ],
+  "givenEdges": [
+    [
+      22,
+      23
+    ],
+    [
+      24,
+      19
+    ],
+    [
+      19,
+      14
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      7,
+      6
+    ],
+    [
+      5,
+      10
+    ],
+    [
+      20,
+      21
+    ],
+    [
+      17,
+      18
+    ]
+  ],
+  "startNode": 22,
+  "endNode": 18
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "path": [
+    22,
+    23,
+    24,
+    19,
+    14,
+    13,
+    8,
+    9,
+    4,
+    3,
+    2,
+    7,
+    6,
+    1,
+    0,
+    5,
+    10,
+    15,
+    20,
+    21,
+    16,
+    11,
+    12,
+    17,
+    18
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>从起点出发，每次移动到相邻的（上下左右）点。一共需要访问 25 个点。
+已经画出的线段是正确路径的一部分。从已有的线段出发，逐步扩展到相邻的未访问点。
+尝试从两端（起点和终点）同时向中间推进。如果某一步走进死胡同，检查是否有其他分支可以走。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>一笔画路径 <span class="difficulty diff-8">Hard (Lv 8)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>圣诞树上挂着串灯，孩子们要让电流点亮每一盏灯——但线不能交叠。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>在 6×6 的点阵中画一条连续线，访问所有点各一次。起点(S)和终点(E)已标记。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "gridSize": 6,
+  "solutionPath": [
+    18,
+    24,
+    30,
+    31,
+    32,
+    26,
+    25,
+    19,
+    20,
+    21,
+    22,
+    28,
+    27,
+    33,
+    34,
+    35,
+    29,
+    23,
+    17,
+    11,
+    5,
+    4,
+    3,
+    9,
+    10,
+    16,
+    15,
+    14,
+    8,
+    7,
+    13,
+    12,
+    6,
+    0,
+    1,
+    2
+  ],
+  "givenEdges": [
+    [
+      18,
+      24
+    ],
+    [
+      28,
+      27
+    ],
+    [
+      27,
+      33
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      10,
+      16
+    ],
+    [
+      13,
+      12
+    ],
+    [
+      1,
+      2
+    ]
+  ],
+  "startNode": 18,
+  "endNode": 2
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "path": [
+    18,
+    24,
+    30,
+    31,
+    32,
+    26,
+    25,
+    19,
+    20,
+    21,
+    22,
+    28,
+    27,
+    33,
+    34,
+    35,
+    29,
+    23,
+    17,
+    11,
+    5,
+    4,
+    3,
+    9,
+    10,
+    16,
+    15,
+    14,
+    8,
+    7,
+    13,
+    12,
+    6,
+    0,
+    1,
+    2
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>从起点出发，每次移动到相邻的（上下左右）点。一共需要访问 36 个点。
+已经画出的线段是正确路径的一部分。从已有的线段出发，逐步扩展到相邻的未访问点。
+尝试从两端（起点和终点）同时向中间推进。如果某一步走进死胡同，检查是否有其他分支可以走。</pre>
+            </div></div><div class="engine-section"><h2>⚙️ Category: RIVER_CROSSING</h2>
+            <div class="puzzle-card">
+                <h3>农夫过河 <span class="difficulty diff-2">Easy (Lv 2)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>一位农夫要带一只狼、一只羊和一棵白菜过河。船每次只能载农夫加一样物品。如果农夫不在场，狼会吃羊，羊会吃白菜。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>一位农夫要带一只狼、一只羊和一棵白菜过河。船每次只能载农夫加一样物品。如果农夫不在场，狼会吃羊，羊会吃白菜。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "一位农夫要带一只狼、一只羊和一棵白菜过河。船每次只能载农夫加一样物品。如果农夫不在场，狼会吃羊，羊会吃白菜。\n\n请写出每一步的过河方案。",
+  "actors": [
+    "农夫",
+    "狼",
+    "羊",
+    "白菜"
+  ],
+  "boatCapacity": 2
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "1.农夫带羊过河，农夫返回；2.农夫带狼过河，带羊返回；3.农夫带白菜过河，农夫返回；4.农夫带羊过河。全部安全到达。"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：思考第一步谁应该先过河。如果只有一对冲突，先带「猎物」过河通常是对的。
+提示二：对于复杂情况，从对岸往回带人的选择也很关键——带谁回来会制造危险？
+提示三：1.农夫带羊过河，农夫返回；2.农夫带狼过河，带羊返回；3.农夫带白菜过河，农夫返回；4.农夫带羊过河。全部安全到达。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>传教士与野人 <span class="difficulty diff-5">Medium (Lv 5)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>3 个传教士和 3 个野人在河岸一侧。船最多载 2 人。如果任何一边野人数量超过传教士，传教士会被吃掉。如何让所有人安全过河？</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>3 个传教士和 3 个野人在河岸一侧。船最多载 2 人。如果任何一边野人数量超过传教士，传教士会被吃掉。如何让所有人安全过河？</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "3 个传教士和 3 个野人在河岸一侧。船最多载 2 人。如果任何一边野人数量超过传教士，传教士会被吃掉。如何让所有人安全过河？\n\n请写出每一步的过河方案。",
+  "actors": [
+    "传教士×3",
+    "野人×3"
+  ],
+  "boatCapacity": 2
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "1.两野人过，一野人回；2.两野人过，一野人回；3.两传教士过，一传教士一野人回；4.两传教士过，一野人回；5.两野人过，一野人回；6.两野人过。全部到达。"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：思考第一步谁应该先过河。如果只有一对冲突，先带「猎物」过河通常是对的。
+提示二：对于复杂情况，从对岸往回带人的选择也很关键——带谁回来会制造危险？
+提示三：1.两野人过，一野人回；2.两野人过，一野人回；3.两传教士过，一传教士一野人回；4.两传教士过，一野人回；5.两野人过，一野人回；6.两野人过。全部到达。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>传教士与野人 <span class="difficulty diff-8">Hard (Lv 8)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>3 个传教士和 3 个野人在河岸一侧。船最多载 2 人。如果任何一边野人数量超过传教士，传教士会被吃掉。如何让所有人安全过河？</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>3 个传教士和 3 个野人在河岸一侧。船最多载 2 人。如果任何一边野人数量超过传教士，传教士会被吃掉。如何让所有人安全过河？</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "3 个传教士和 3 个野人在河岸一侧。船最多载 2 人。如果任何一边野人数量超过传教士，传教士会被吃掉。如何让所有人安全过河？\n\n请写出每一步的过河方案。",
+  "actors": [
+    "传教士×3",
+    "野人×3"
+  ],
+  "boatCapacity": 2
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "1.两野人过，一野人回；2.两野人过，一野人回；3.两传教士过，一传教士一野人回；4.两传教士过，一野人回；5.两野人过，一野人回；6.两野人过。全部到达。"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：思考第一步谁应该先过河。如果只有一对冲突，先带「猎物」过河通常是对的。
+提示二：对于复杂情况，从对岸往回带人的选择也很关键——带谁回来会制造危险？
+提示三：1.两野人过，一野人回；2.两野人过，一野人回；3.两传教士过，一传教士一野人回；4.两传教士过，一野人回；5.两野人过，一野人回；6.两野人过。全部到达。</pre>
+            </div></div><div class="engine-section"><h2>⚙️ Category: SLIDING_BLOCK</h2>
+            <div class="puzzle-card">
+                <h3>华容道 · 初出茅庐 <span class="difficulty diff-2">Easy (Lv 2)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>教授在阁楼里发现了一个古老的木盒。 盒面上的滑块似乎构成了某种图案——但顺序是乱的。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>滑动方块为目标腾出道路。将目标块（2×2）移动到出口即为通关。此局最优解需要 8 步。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "boardWidth": 4,
+  "boardHeight": 5,
+  "blocks": [
+    {
+      "id": "target",
+      "width": 2,
+      "height": 2,
+      "isTarget": true,
+      "x": 0,
+      "y": 3
+    },
+    {
+      "id": "small_3",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 0,
+      "y": 2
+    },
+    {
+      "id": "small_4",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 0,
+      "y": 1
+    },
+    {
+      "id": "horizontal",
+      "width": 2,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 0
+    },
+    {
+      "id": "small_1",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 2
+    },
+    {
+      "id": "small_2",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 1
+    },
+    {
+      "id": "vertical_4",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 3,
+      "y": 1
+    },
+    {
+      "id": "vertical_1",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 3,
+      "y": 3
+    },
+    {
+      "id": "vertical_3",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 1,
+      "y": 1
+    },
+    {
+      "id": "vertical_2",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 2,
+      "y": 3
+    }
+  ],
+  "exitX": 1,
+  "exitY": 3
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "boardWidth": 4,
+  "boardHeight": 5,
+  "blocks": [
+    {
+      "id": "target",
+      "width": 2,
+      "height": 2,
+      "isTarget": true,
+      "x": 1,
+      "y": 3
+    },
+    {
+      "id": "small_3",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": "small_4",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 1,
+      "y": 0
+    },
+    {
+      "id": "horizontal",
+      "width": 2,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 0
+    },
+    {
+      "id": "small_1",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 0,
+      "y": 1
+    },
+    {
+      "id": "small_2",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 1,
+      "y": 1
+    },
+    {
+      "id": "vertical_4",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 2,
+      "y": 1
+    },
+    {
+      "id": "vertical_1",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 3,
+      "y": 1
+    },
+    {
+      "id": "vertical_3",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 0,
+      "y": 2
+    },
+    {
+      "id": "vertical_2",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 3,
+      "y": 3
+    }
+  ],
+  "exitX": 1,
+  "exitY": 3
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>第一步：尝试将「横向障碍(2x1)」向左移动。
+关键一步：在第 5 步时，需要将「小障碍1」向右移动来打开通路。
+整体策略：此局共需 8 步，其中目标块需移动 1 次。优先清理下方通道。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>华容道 · 过关斩将 <span class="difficulty diff-5">Medium (Lv 5)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>古老的神庙深处，一道石门挡住了去路。 传说只有解开滑块之谜，门才会打开。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>滑动方块为目标腾出道路。将目标块（2×2）移动到出口即为通关。此局最优解需要 18 步。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "boardWidth": 4,
+  "boardHeight": 5,
+  "blocks": [
+    {
+      "id": "target",
+      "width": 2,
+      "height": 2,
+      "isTarget": true,
+      "x": 0,
+      "y": 3
+    },
+    {
+      "id": "vertical_3",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": "horizontal",
+      "width": 2,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 1
+    },
+    {
+      "id": "vertical_4",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 3,
+      "y": 2
+    },
+    {
+      "id": "vertical_2",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 1,
+      "y": 1
+    },
+    {
+      "id": "small_2",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 0,
+      "y": 2
+    },
+    {
+      "id": "small_1",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 0
+    },
+    {
+      "id": "vertical_1",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 2,
+      "y": 2
+    },
+    {
+      "id": "small_3",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 3,
+      "y": 4
+    },
+    {
+      "id": "small_4",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 1,
+      "y": 0
+    }
+  ],
+  "exitX": 1,
+  "exitY": 3
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "boardWidth": 4,
+  "boardHeight": 5,
+  "blocks": [
+    {
+      "id": "target",
+      "width": 2,
+      "height": 2,
+      "isTarget": true,
+      "x": 1,
+      "y": 3
+    },
+    {
+      "id": "vertical_3",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": "horizontal",
+      "width": 2,
+      "height": 1,
+      "isTarget": false,
+      "x": 1,
+      "y": 0
+    },
+    {
+      "id": "vertical_4",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 3,
+      "y": 0
+    },
+    {
+      "id": "vertical_2",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 1,
+      "y": 1
+    },
+    {
+      "id": "small_2",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 1
+    },
+    {
+      "id": "small_1",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 0,
+      "y": 2
+    },
+    {
+      "id": "vertical_1",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 3,
+      "y": 2
+    },
+    {
+      "id": "small_3",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 2
+    },
+    {
+      "id": "small_4",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 0,
+      "y": 3
+    }
+  ],
+  "exitX": 1,
+  "exitY": 3
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>第一步：尝试将「小障碍1」向右移动。
+关键一步：在第 10 步时，需要将「小障碍1」向左移动来打开通路。
+整体策略：此局共需 18 步，其中目标块需移动 1 次。优先清理下方通道。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>华容道 · 千里走单骑 <span class="difficulty diff-8">Hard (Lv 8)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>教授在阁楼里发现了一个古老的木盒。 盒面上的滑块似乎构成了某种图案——但顺序是乱的。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>滑动方块为目标腾出道路。将目标块（2×2）移动到出口即为通关。此局最优解需要 35 步。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "boardWidth": 4,
+  "boardHeight": 5,
+  "blocks": [
+    {
+      "id": "target",
+      "width": 2,
+      "height": 2,
+      "isTarget": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": "small_3",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 1,
+      "y": 2
+    },
+    {
+      "id": "small_1",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 1
+    },
+    {
+      "id": "horizontal",
+      "width": 2,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 0
+    },
+    {
+      "id": "vertical_4",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 1,
+      "y": 3
+    },
+    {
+      "id": "small_4",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 4
+    },
+    {
+      "id": "vertical_2",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 3,
+      "y": 1
+    },
+    {
+      "id": "small_2",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 3,
+      "y": 3
+    },
+    {
+      "id": "vertical_3",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 2,
+      "y": 2
+    },
+    {
+      "id": "vertical_1",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 0,
+      "y": 2
+    }
+  ],
+  "exitX": 1,
+  "exitY": 3
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "boardWidth": 4,
+  "boardHeight": 5,
+  "blocks": [
+    {
+      "id": "target",
+      "width": 2,
+      "height": 2,
+      "isTarget": true,
+      "x": 1,
+      "y": 3
+    },
+    {
+      "id": "small_3",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": "small_1",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 1,
+      "y": 0
+    },
+    {
+      "id": "horizontal",
+      "width": 2,
+      "height": 1,
+      "isTarget": false,
+      "x": 2,
+      "y": 0
+    },
+    {
+      "id": "vertical_4",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 0,
+      "y": 1
+    },
+    {
+      "id": "small_4",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 1,
+      "y": 1
+    },
+    {
+      "id": "vertical_2",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 2,
+      "y": 1
+    },
+    {
+      "id": "small_2",
+      "width": 1,
+      "height": 1,
+      "isTarget": false,
+      "x": 3,
+      "y": 1
+    },
+    {
+      "id": "vertical_3",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 3,
+      "y": 2
+    },
+    {
+      "id": "vertical_1",
+      "width": 1,
+      "height": 2,
+      "isTarget": false,
+      "x": 0,
+      "y": 3
+    }
+  ],
+  "exitX": 1,
+  "exitY": 3
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>第一步：尝试将「小障碍4」向右移动。
+关键一步：在第 18 步时，需要将「纵向障碍1(1x2)」向上移动来打开通路。
+整体策略：此局共需 35 步，其中目标块需移动 4 次。优先清理下方通道。</pre>
+            </div></div><div class="engine-section"><h2>⚙️ Category: JIGSAW</h2>
+            <div class="puzzle-card">
+                <h3>七巧板 · 十字 <span class="difficulty diff-2">Easy (Lv 2)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>教堂的彩窗图案被打乱了。修女说："拼回十字架，阳光就会透进来。"</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>将 3 个碎片拼入网格中的目标形状（十字）。碎片可以旋转（R键）和翻转（F键）。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "gridSize": 5,
+  "targetCells": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      1
+    ]
+  ],
+  "pieces": [
+    {
+      "id": 0,
+      "cells": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 1,
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  ],
+  "cellCount": 6,
+  "pieceCount": 3,
+  "picarat": 30,
+  "shapeName": "十字"
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "pieces": [
+    {
+      "id": 0,
+      "cells": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 1,
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：目标形状是"十字"，由 6 个格子组成，共 3 个碎片。先从边角入手。
+提示二：观察目标形状的轮廓——十字的边缘特征很明显，试着先放置最大的碎片。
+提示三：最大碎片有 2 个格子。如果卡住了，尝试旋转（R键）或翻转（F键）碎片。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>七巧板 · 房子 <span class="difficulty diff-5">Medium (Lv 5)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>建筑师留下了一张小屋设计图，但图纸被裁成了碎片。你能还原这座房子的轮廓吗？</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>将 4 个碎片拼入网格中的目标形状（房子）。碎片可以旋转（R键）和翻转（F键）。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "gridSize": 6,
+  "targetCells": [
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      2,
+      4
+    ]
+  ],
+  "pieces": [
+    {
+      "id": 1,
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "id": 0,
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  ],
+  "cellCount": 9,
+  "pieceCount": 4,
+  "picarat": 60,
+  "shapeName": "房子"
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "pieces": [
+    {
+      "id": 0,
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "id": 1,
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "cells": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    }
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：目标形状是"房子"，由 9 个格子组成，共 4 个碎片。先从边角入手。
+提示二：观察目标形状的轮廓——房子的边缘特征很明显，试着先放置最大的碎片。
+提示三：最大碎片有 3 个格子。如果卡住了，尝试旋转（R键）或翻转（F键）碎片。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>七巧板 · 十字 <span class="difficulty diff-8">Hard (Lv 8)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>教堂的彩窗图案被打乱了。修女说："拼回十字架，阳光就会透进来。"</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>将 6 个碎片拼入网格中的目标形状（十字）。碎片可以旋转（R键）和翻转（F键）。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "gridSize": 7,
+  "targetCells": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      1
+    ]
+  ],
+  "pieces": [
+    {
+      "id": 0,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 1,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  ],
+  "cellCount": 6,
+  "pieceCount": 6,
+  "picarat": 90,
+  "shapeName": "十字"
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "pieces": [
+    {
+      "id": 0,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 1,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  ]
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：目标形状是"十字"，由 6 个格子组成，共 6 个碎片。先从边角入手。
+提示二：观察目标形状的轮廓——十字的边缘特征很明显，试着先放置最大的碎片。
+提示三：最大碎片有 1 个格子。如果卡住了，尝试旋转（R键）或翻转（F键）碎片。</pre>
+            </div></div><div class="engine-section"><h2>⚙️ Category: MATH</h2>
+            <div class="puzzle-card">
+                <h3>等式填空 <span class="difficulty diff-2">Easy (Lv 2)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>教授在路边捡到一块刻着数字的石板。 上面的数字似乎遵循某种神秘规律。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>教授在路边捡到一块刻着数字的石板。 上面的数字似乎遵循某种神秘规律。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "(  ) - 4 + 9 = 10"
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "A = 5"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：先计算已知部分，(  ) - 4 的中间结果可以帮助你推理。
+提示二：A 的值与等式两边的平衡有关。
+提示三：A = 5</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>等式填空 <span class="difficulty diff-5">Medium (Lv 5)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>教授在路边捡到一块刻着数字的石板。 上面的数字似乎遵循某种神秘规律。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>教授在路边捡到一块刻着数字的石板。 上面的数字似乎遵循某种神秘规律。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "(  ) × (  ) × 7 = 1960"
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "A = 14；B = 20"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：先计算已知部分，(  ) × (  ) 的中间结果可以帮助你推理。
+提示二：A 的值与等式两边的平衡有关。
+提示三：A = 14</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>谁在说谎 <span class="difficulty diff-8">Hard (Lv 8)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>数学课上，老师在黑板上留下了一串数字。 "找到规律的人可以提前下课"，她说。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>数学课上，老师在黑板上留下了一串数字。 "找到规律的人可以提前下课"，她说。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "丙说：「是丁做的。」\n戊说：「是丙做的。」\n乙说：「是丙做的。」\n丁说：「是丙做的。」\n甲说：「是丙做的。」"
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "说谎者是丙"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：只有一个人在说谎，其他人都说了真话。
+提示二：说真话的人都会指向同一个人。
+提示三：说谎者是说丙。</pre>
+            </div></div><div class="engine-section"><h2>⚙️ Category: WEIGHING</h2>
+            <div class="puzzle-card">
+                <h3>天平称重 · 3 枚硬币 <span class="difficulty diff-2">Easy (Lv 2)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>桌上放着 3 枚外观完全相同的金币，其中 1 枚是假的——它比真币更轻。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>桌上放着 3 枚外观完全相同的金币，其中 1 枚是假的——它比真币更轻。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "桌上放着 3 枚外观完全相同的金币，其中 1 枚是假的——它比真币更轻。 你有一个天平（无砝码），最多只能称 2 次。请问哪一枚是假币？它是更轻还是更重？",
+  "coins": 3,
+  "weighings": 2,
+  "fakeIndex": 1,
+  "isHeavier": true
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "第 1 枚金币是假的，它比真币更重。"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：每次称量都有三种结果：左边重、右边重、平衡。2 次称量最多能区分 9 种情况。
+提示二：第一次称：将金币分成三组。称其中两组。
+提示三：第 1 枚金币是假的，它比真币更重。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>天平称重 · 5 枚硬币 <span class="difficulty diff-5">Medium (Lv 5)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>你有 5 枚金币，其中 1 枚是假的——它比真币更轻。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>你有 5 枚金币，其中 1 枚是假的——它比真币更轻。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "你有 5 枚金币，其中 1 枚是假的——它比真币更轻。 你有一个天平（无砝码），最多只能称 2 次。请问哪一枚是假币？它是更轻还是更重？",
+  "coins": 5,
+  "weighings": 2,
+  "fakeIndex": 4,
+  "isHeavier": true
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "第 4 枚金币是假的，它比真币更重。"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：每次称量都有三种结果：左边重、右边重、平衡。2 次称量最多能区分 9 种情况。
+提示二：第一次称：将金币分成三组。称其中两组。
+提示三：第 4 枚金币是假的，它比真币更重。</pre>
+            </div>
+            <div class="puzzle-card">
+                <h3>天平称重 · 5 枚硬币 <span class="difficulty diff-8">Hard (Lv 8)</span></h3>
+                <div class="section-title">Narrative/Scenario:</div>
+                <p>你有 5 枚金币，其中 1 枚是假的——它比真币更轻。</p>
+                <div class="section-title">Description (Rules):</div>
+                <p>你有 5 枚金币，其中 1 枚是假的——它比真币更轻。</p>
+                
+                <div class="section-title">Initial State (Raw Structure):</div>
+                <pre>{
+  "question": "你有 5 枚金币，其中 1 枚是假的——它比真币更轻。 你有一个天平（无砝码），最多只能称 2 次。请问哪一枚是假币？它是更轻还是更重？",
+  "coins": 5,
+  "weighings": 2,
+  "fakeIndex": 5,
+  "isHeavier": true
+}</pre>
+                
+                <div class="section-title">Goal State (Raw Structure):</div>
+                <pre>{
+  "answer": "第 5 枚金币是假的，它比真币更重。"
+}</pre>
+                
+                <div class="section-title">Hints:</div>
+                <pre>提示一：每次称量都有三种结果：左边重、右边重、平衡。2 次称量最多能区分 9 种情况。
+提示二：第一次称：将金币分成三组。称其中两组。
+提示三：第 5 枚金币是假的，它比真币更重。</pre>
+            </div></div></body></html>

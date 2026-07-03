@@ -59,7 +59,8 @@ export class PathEngine implements PuzzleEngine {
       type: PuzzleType.PATH_FINDING,
       difficulty,
       title: story.title,
-      description: story.scenario,
+      description: story.question, // description matches layout expected rule/goal text
+      narrative_setup: story.scenario, // narrative_setup matches layout expected background story
       initial_state: state,
       goal_state: { path: solutionPath },
       hints: this.generateHints(difficulty, gridSize),

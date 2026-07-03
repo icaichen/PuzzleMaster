@@ -10,7 +10,7 @@ import { AssetManifest } from '../models/PuzzleData';
 
 export class SceneRenderer {
   private bgImage: HTMLImageElement | null = null;
-  private spriteImages: Map<string, HTMLImageElement> = new Map();
+  private spriteImages: Map<string, HTMLImageElement | HTMLCanvasElement> = new Map();
   private loaded = false;
 
   /**
@@ -20,10 +20,23 @@ export class SceneRenderer {
     this.loaded = false;
     this.spriteImages.clear();
 
-    const loadImg = (url: string) => {
-      return new Promise<HTMLImageElement>((resolve, reject) => {
+    const loadImg = (url: string, isSprite: boolean) => {
+      return new Promise<HTMLCanvasElement | HTMLImageElement>((resolve, reject) => {
         const img = new Image();
-        img.onload = () => resolve(img);
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          if (isSprite) {
+            try {
+              const processed = this.removeBackground(img);
+              resolve(processed);
+            } catch (e) {
+              console.warn('Failed to remove background, using original image:', e);
+              resolve(img);
+            }
+          } else {
+            resolve(img);
+          }
+        };
         img.onerror = () => reject(new Error(`Failed to load image: ${url}`));
         img.src = url;
       });
@@ -35,8 +48,8 @@ export class SceneRenderer {
       // Load background
       if (manifest.background_url) {
         promises.push(
-          loadImg(manifest.background_url).then(img => {
-            this.bgImage = img;
+          loadImg(manifest.background_url, false).then(img => {
+            this.bgImage = img as HTMLImageElement;
           })
         );
       }
@@ -44,7 +57,7 @@ export class SceneRenderer {
       // Load sprites
       for (const sprite of manifest.sprites) {
         promises.push(
-          loadImg(sprite.url).then(img => {
+          loadImg(sprite.url, true).then(img => {
             this.spriteImages.set(sprite.id, img);
           })
         );
@@ -55,6 +68,53 @@ export class SceneRenderer {
     } catch (err) {
       console.error('SceneRenderer failed to load assets:', err);
     }
+  }
+
+  /**
+   * Automatically key out the solid background of an image (e.g. pure white or pure black).
+   * It samples the corner pixels to detect the background color, then sets its alpha to 0.
+   */
+  private removeBackground(img: HTMLImageElement): HTMLCanvasElement {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth || img.width;
+    canvas.height = img.naturalHeight || img.height;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return canvas;
+
+    ctx.drawImage(img, 0, 0);
+    
+    try {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+
+      // Sample top-left pixel as background color
+      const bgR = data[0];
+      const bgG = data[1];
+      const bgB = data[2];
+
+      // Threshold for color similarity (Manhattan distance in RGB space)
+      // Higher threshold = more aggressive removal
+      const threshold = 45;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        const dist = Math.abs(r - bgR) + Math.abs(g - bgG) + Math.abs(b - bgB);
+        if (dist < threshold) {
+          data[i + 3] = 0; // Set alpha to 0 (fully transparent)
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+    } catch (e) {
+      // getImageData might throw if cross-origin (though should be safe on same-origin)
+      console.error('Error processing image transparency:', e);
+    }
+
+    return canvas;
   }
 
   public isLoaded(): boolean {
@@ -68,14 +128,8 @@ export class SceneRenderer {
    * @param h 画布高度
    * @param elements 当前帧需要渲染的元素数组 (包含 id, x, y, width, height)
    */
-  public draw(
-    ctx: CanvasRenderingContext2D,
-    w: number,
-    h: number,
-    elements: { id: string; x: number; y: number; w: number; h: number; alpha?: number }[]
-  ): void {
+  public drawBackground(ctx: CanvasRenderingContext2D, w: number, h: number): void {
     if (!this.loaded) {
-      // 资产未加载完毕时的占位符
       ctx.fillStyle = '#1a1428';
       ctx.fillRect(0, 0, w, h);
       ctx.fillStyle = '#fff';
@@ -87,7 +141,6 @@ export class SceneRenderer {
 
     // 1. 绘制背景 (Cover)
     if (this.bgImage) {
-      // 按比例拉伸覆盖整个区域，或者居中裁剪
       const imgRatio = this.bgImage.width / this.bgImage.height;
       const canvasRatio = w / h;
       let drawW = w;
@@ -112,32 +165,60 @@ export class SceneRenderer {
     // 暗角/滤镜效果，增加雷顿风质感
     const grad = ctx.createRadialGradient(w/2, h/2, w * 0.3, w/2, h/2, w);
     grad.addColorStop(0, 'rgba(0,0,0,0)');
-    grad.addColorStop(1, 'rgba(0,0,0,0.4)');
+    grad.addColorStop(1, 'rgba(0,0,0,0.6)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
+  }
+
+  public drawSprites(
+    ctx: CanvasRenderingContext2D,
+    elements: { id: string; x: number; y: number; w: number; h: number; alpha?: number; scale?: number; glow?: boolean; isTarget?: boolean }[]
+  ): void {
+    if (!this.loaded) return;
 
     // 2. 绘制每个切图 (Sprite)
     for (const el of elements) {
       const img = this.spriteImages.get(el.id);
+      
+      // Compute scaling
+      const scale = el.scale ?? 1.0;
+      const scaledW = el.w * scale;
+      const scaledH = el.h * scale;
+      const offsetX = el.x - (scaledW - el.w) / 2;
+      const offsetY = el.y - (scaledH - el.h) / 2;
+
       if (img) {
         ctx.save();
         if (el.alpha !== undefined) {
           ctx.globalAlpha = el.alpha;
         }
         
-        // 简单增加一点下拉阴影以增加立体感
-        ctx.shadowColor = 'rgba(0,0,0,0.5)';
-        ctx.shadowBlur = 8;
-        ctx.shadowOffsetY = 4;
+        // 特效：拖拽高亮 (Glow) 或 目标角色聚光灯
+        if (el.glow) {
+          ctx.shadowColor = 'rgba(255, 215, 0, 0.8)'; // Golden glow
+          ctx.shadowBlur = 15;
+          ctx.shadowOffsetY = 0;
+        } else {
+          // 普通阴影
+          ctx.shadowColor = 'rgba(0,0,0,0.5)';
+          ctx.shadowBlur = 8;
+          ctx.shadowOffsetY = 4;
+        }
         
-        ctx.drawImage(img, el.x, el.y, el.w, el.h);
+        // 特效：目标角色聚光灯底座
+        if (el.isTarget && !el.glow) {
+           ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+           ctx.shadowBlur = 20;
+        }
+
+        ctx.drawImage(img, offsetX, offsetY, scaledW, scaledH);
         ctx.restore();
       } else {
-        // Fallback，如果没有找到图片，画一个占位方块
-        ctx.fillStyle = 'rgba(255, 100, 100, 0.5)';
-        ctx.fillRect(el.x, el.y, el.w, el.h);
+        // Fallback
+        ctx.fillStyle = el.glow ? 'rgba(255, 200, 100, 0.8)' : 'rgba(255, 100, 100, 0.5)';
+        ctx.fillRect(offsetX, offsetY, scaledW, scaledH);
         ctx.strokeStyle = '#fff';
-        ctx.strokeRect(el.x, el.y, el.w, el.h);
+        ctx.strokeRect(offsetX, offsetY, scaledW, scaledH);
       }
     }
   }
