@@ -3,16 +3,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "verify": "node scripts/reference/verify-azran-coverage.mjs && node scripts/validate-specs.mjs && node scripts/verify-runtime.mjs && node scripts/verify-csp-runtime.mjs && node scripts/verify-geometry-runtime.mjs && node scripts/verify-piece-assembly-runtime.mjs && node scripts/verify-grid-placement-runtime.mjs && node scripts/verify-designs.mjs",
+    "verify": "node scripts/reference/verify-azran-coverage.mjs && node scripts/adapters/verify-interaction-adapters.mjs && node scripts/validate-specs.mjs && node scripts/verify-runtime.mjs && node scripts/verify-csp-runtime.mjs && node scripts/verify-geometry-runtime.mjs && node scripts/verify-piece-assembly-runtime.mjs && node scripts/verify-grid-placement-runtime.mjs && node scripts/verify-designs.mjs",
     "verify:specs": "node scripts/validate-specs.mjs",
     "verify:runtime": "node scripts/verify-runtime.mjs",
     "verify:csp": "node scripts/verify-csp-runtime.mjs",
     "verify:geometry": "node scripts/verify-geometry-runtime.mjs",
     "verify:assembly": "node scripts/verify-piece-assembly-runtime.mjs",
     "verify:grid": "node scripts/verify-grid-placement-runtime.mjs",
+    "testbench": "node scripts/serve-testbench.mjs",
     "verify:designs": "node scripts/verify-designs.mjs",
     "generate:temperature": "node scripts/generate-temperature-batch.mjs",
     "audit:fetch-reference": "node scripts/reference/fetch-azran-reference.mjs",
-    "audit:build-coverage": "node scripts/reference/build-azran-coverage.mjs"
+    "audit:build-coverage": "node scripts/reference/build-azran-coverage.mjs",
+    "adapters:build": "node scripts/adapters/build-interaction-adapters.mjs"
   }
 }

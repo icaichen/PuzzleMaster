@@ -1,0 +1,38 @@
+{
+  "puzzleId": "thermal-domino-array-001",
+  "auditVersion": "1.0.0",
+  "status": "VISUAL_REVIEWED",
+  "evidence": {
+    "logic": {
+      "passed": true,
+      "solutions": 1,
+      "withoutHotAdjacencyRuleSolutions": 32,
+      "withoutVerticalCountSolutions": 3
+    },
+    "interaction": {
+      "passed": true,
+      "fixedPieceErrorFeedback": true,
+      "solutionReplay": true,
+      "finalFilledCells": 12,
+      "finalVerticalDominoes": 2,
+      "finalHotAdjacencyViolations": 0
+    },
+    "visual": {
+      "desktopReviewed": true,
+      "mobileWidth": 390,
+      "horizontalOverflow": false,
+      "mobileStatusLayout": "SINGLE_COLUMN",
+      "reducedMotionRulePresent": true
+    },
+    "playerData": {
+      "available": false,
+      "status": "REQUIRED_BEFORE_PLAYER_VALIDATED"
+    }
+  },
+  "knownLimitations": [
+    "尚未采集真人首次完成率、提示率和退出率。",
+    "当前只验证 GRID_PLACEMENT 代表题，其他内核尚未接入测试台。",
+    "低保真符号验证了辨识与操作，不代表最终美术资产已经审核。"
+  ],
+  "reviewedAt": "2026-07-04T00:00:00+08:00"
+}

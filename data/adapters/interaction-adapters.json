@@ -1,0 +1,2871 @@
+{
+  "version": "1.0.0",
+  "sourceMechanisms": 96,
+  "adapterCount": 70,
+  "baseSurfaceCount": 28,
+  "baseSurfaces": [
+    "ASSEMBLY_STAGE",
+    "ASSIGNMENT_BOARD",
+    "BEAM_STAGE",
+    "CONTROL_PANEL",
+    "EXAMPLE_TABLE",
+    "FOLDING_STAGE",
+    "FORM_PANEL",
+    "FREE_CANVAS",
+    "GRAPH_BOARD",
+    "GRAPH_TIMELINE",
+    "GRID_BOARD",
+    "LAYER_STAGE",
+    "MATRIX_BOARD",
+    "OBJECT_STAGE",
+    "PARALLEL_TEXT",
+    "PATH_BOARD",
+    "PROGRAM_PANEL",
+    "PYRAMID_BOARD",
+    "QUERY_TABLE",
+    "RADIAL_BOARD",
+    "SEQUENCE_STRIP",
+    "SPHERE_STAGE",
+    "STACK_BOARD",
+    "STATEMENT_PANEL",
+    "SYMBOL_STAGE",
+    "TIMELINE_STRIP",
+    "TRACK_STAGE",
+    "VISUAL_STAGE"
+  ],
+  "adapters": [
+    {
+      "id": "ADP-ATTRIBUTE-SPATIAL-BOARD",
+      "name": "数量颜色与空间邻接联合分配交互适配器",
+      "baseSurfaces": [
+        "ASSIGNMENT_BOARD"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "OBJECT_PLACE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-044"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-BEAM-REFLECTION",
+      "name": "碰撞反射并旋转反射板交互适配器",
+      "baseSurfaces": [
+        "BEAM_STAGE"
+      ],
+      "runtimeKernels": [
+        "BEAM_REFLECTION"
+      ],
+      "primaryInputs": [
+        "LAUNCH_ROTATE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-085"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-CARRIER-TIMELINE",
+      "name": "不同速度移动载具的定时换乘交互适配器",
+      "baseSurfaces": [
+        "GRAPH_TIMELINE"
+      ],
+      "runtimeKernels": [
+        "TIME_EXPANDED_ROUTE"
+      ],
+      "primaryInputs": [
+        "WAIT_TRANSFER"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-020"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-CHAIN-SEQUENCE-SIM",
+      "name": "方向敏感的连锁倒塌交互适配器",
+      "baseSurfaces": [
+        "OBJECT_STAGE"
+      ],
+      "runtimeKernels": [
+        "SEQUENCE_SIMULATION"
+      ],
+      "primaryInputs": [
+        "TRIGGER_SELECT"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-047"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-CLOCK-SEGMENT-ROTATE",
+      "name": "分片等和恢复钟面朝向交互适配器",
+      "baseSurfaces": [
+        "RADIAL_BOARD"
+      ],
+      "runtimeKernels": [
+        "STATIC_REASONING"
+      ],
+      "primaryInputs": [
+        "SEGMENT_ROTATE"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-071"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-COUNT-GUIDED-GRID",
+      "name": "行列计数约束下的多格块放置交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "GRID_PLACEMENT",
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "DRAG_ROTATE",
+        "BINARY_TOGGLE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-030",
+        "REF-086"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-DISTANCE-GRID-ASSIGN",
+      "name": "多源最短距离约束放置交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "OBJECT_PLACE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-069"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-DISTANCE-REARRANGE",
+      "name": "有限传递距离和空位的标记重排交互适配器",
+      "baseSurfaces": [
+        "SEQUENCE_STRIP"
+      ],
+      "runtimeKernels": [
+        "REARRANGEMENT"
+      ],
+      "primaryInputs": [
+        "TOKEN_MOVE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-050"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-DYNAMIC-GRID-ROUTE",
+      "name": "踩踏后持续滑行的移动平台路线交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "DYNAMIC_GRID_ROUTE"
+      ],
+      "primaryInputs": [
+        "DIRECTION_INPUT"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-017",
+        "REF-082",
+        "REF-092"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-EDGE-PIECE-ASSEMBLY",
+      "name": "边界属性匹配拼图与多余片交互适配器",
+      "baseSurfaces": [
+        "ASSEMBLY_STAGE"
+      ],
+      "runtimeKernels": [
+        "PIECE_ASSEMBLY"
+      ],
+      "primaryInputs": [
+        "DRAG_ROTATE_DISCARD"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-076"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-FRAGMENT-SELECTION",
+      "name": "从候选碎片重建参考图交互适配器",
+      "baseSurfaces": [
+        "ASSEMBLY_STAGE"
+      ],
+      "runtimeKernels": [
+        "PIECE_ASSEMBLY"
+      ],
+      "primaryInputs": [
+        "SELECT_PLACE"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-033"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-FREE-BRIDGE-PLACEMENT",
+      "name": "障碍区域中的自由拼块桥接交互适配器",
+      "baseSurfaces": [
+        "FREE_CANVAS"
+      ],
+      "runtimeKernels": [
+        "GEOMETRIC_PLACEMENT"
+      ],
+      "primaryInputs": [
+        "DRAG_ROTATE"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-064"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-FREE-PIECE-ASSEMBLY",
+      "name": "自由拼块还原目标轮廓交互适配器",
+      "baseSurfaces": [
+        "FREE_CANVAS"
+      ],
+      "runtimeKernels": [
+        "PIECE_ASSEMBLY"
+      ],
+      "primaryInputs": [
+        "DRAG_ROTATE"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-016",
+        "REF-057"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-FREE-RAY-PLACEMENT",
+      "name": "覆盖且同色射线不相交交互适配器",
+      "baseSurfaces": [
+        "FREE_CANVAS"
+      ],
+      "runtimeKernels": [
+        "GEOMETRIC_PLACEMENT"
+      ],
+      "primaryInputs": [
+        "DRAG_ROTATE"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-003"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-GRAPH-COLORING",
+      "name": "接触图着色交互适配器",
+      "baseSurfaces": [
+        "GRAPH_BOARD"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "COLOR_SELECT"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-013"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-GRAPH-DEDUCTION",
+      "name": "公交网络陈述反推共同目标交互适配器",
+      "baseSurfaces": [
+        "GRAPH_BOARD"
+      ],
+      "runtimeKernels": [
+        "GRAPH_DEDUCTION"
+      ],
+      "primaryInputs": [
+        "NODE_EDGE_SELECT",
+        "EDGE_SELECT"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-024",
+        "REF-081"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-GRAPH-RESOURCE-ROUTE",
+      "name": "有限燃料补给路径交互适配器",
+      "baseSurfaces": [
+        "GRAPH_BOARD"
+      ],
+      "runtimeKernels": [
+        "RESOURCE_ROUTE",
+        "GRAPH_ROUTE"
+      ],
+      "primaryInputs": [
+        "MOVE_SELECT",
+        "EDGE_MOVE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-001",
+        "REF-031",
+        "REF-037",
+        "REF-065"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-GROUP-ALLOCATION",
+      "name": "总重与件数约束的多组分配交互适配器",
+      "baseSurfaces": [
+        "ASSIGNMENT_BOARD"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "OBJECT_ASSIGN"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-075"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-HIDDEN-SHAPE-SELECT",
+      "name": "复杂纹样中的隐藏形状选择交互适配器",
+      "baseSurfaces": [
+        "VISUAL_STAGE"
+      ],
+      "runtimeKernels": [
+        "VISUAL_INSPECTION"
+      ],
+      "primaryInputs": [
+        "SHAPE_SELECT",
+        "COUNT_INPUT"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-029",
+        "REF-059"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-INTERVAL-RESOURCE-SELECT",
+      "name": "区间覆盖最少资源交互适配器",
+      "baseSurfaces": [
+        "TIMELINE_STRIP"
+      ],
+      "runtimeKernels": [
+        "STATIC_REASONING"
+      ],
+      "primaryInputs": [
+        "RANGE_SELECT"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-028"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-JUMP-TOKEN-BOARD",
+      "name": "连续跳跃并翻转被跨越棋子交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "TOKEN_TRANSITION"
+      ],
+      "primaryInputs": [
+        "TOKEN_MOVE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-007",
+        "REF-058"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-LAYER-STACK",
+      "name": "固定尺寸彩色图层叠加成图交互适配器",
+      "baseSurfaces": [
+        "LAYER_STAGE"
+      ],
+      "runtimeKernels": [
+        "LAYER_COMPOSITING"
+      ],
+      "primaryInputs": [
+        "DRAG_REORDER"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-019"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-LINE-REGION-DRAW",
+      "name": "有限直线最大分区并隔离目标交互适配器",
+      "baseSurfaces": [
+        "FREE_CANVAS"
+      ],
+      "runtimeKernels": [
+        "LINE_REGION_GEOMETRY"
+      ],
+      "primaryInputs": [
+        "LINE_DRAW",
+        "ANCHOR_CONNECT"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-018",
+        "REF-040"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-LINEUP-ASSIGNMENT",
+      "name": "多条自然语言限制下的顺序选择交互适配器",
+      "baseSurfaces": [
+        "SEQUENCE_STRIP"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "DRAG_PLACE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-049"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-LOCAL-ROTATION-GRID",
+      "name": "旋转局部方块重建连续通道交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "GRID_TRANSFORM"
+      ],
+      "primaryInputs": [
+        "REGION_ROTATE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-094"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-MASK-TOGGLE",
+      "name": "可平移形状掩模的网格翻转交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "TOGGLE_NETWORK"
+      ],
+      "primaryInputs": [
+        "MASK_DRAG_TOGGLE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-089"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-MIXTURE-CONTROL",
+      "name": "离散配比达到隐藏目标区间交互适配器",
+      "baseSurfaces": [
+        "CONTROL_PANEL"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "VALUE_ADJUST"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-063"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-MOMENTUM-SLIDE",
+      "name": "碰撞滑行与落穴填充交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "SLIDING_PHYSICS"
+      ],
+      "primaryInputs": [
+        "DIRECTION_INPUT",
+        "BLOCK_SLIDE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-008",
+        "REF-087"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-NARRATIVE-STATE-MACHINE",
+      "name": "叙事提示驱动的符号状态机交互适配器",
+      "baseSurfaces": [
+        "SYMBOL_STAGE"
+      ],
+      "runtimeKernels": [
+        "TOGGLE_NETWORK"
+      ],
+      "primaryInputs": [
+        "SYMBOL_TRIGGER"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-096"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BESPOKE_ONLY",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-NEIGHBORHOOD-SUM-GRID",
+      "name": "重叠邻域和的平衡排列交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "VALUE_PLACE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-078"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-NET-COVER",
+      "name": "立方体展开网格精确覆盖交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "EXACT_COVER_PARTITION"
+      ],
+      "primaryInputs": [
+        "NET_SELECT"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-074"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-NET-FOLD",
+      "name": "立体展开面的对应位置交互适配器",
+      "baseSurfaces": [
+        "FOLDING_STAGE"
+      ],
+      "runtimeKernels": [
+        "SPATIAL_TRANSFORM"
+      ],
+      "primaryInputs": [
+        "FACE_SELECT",
+        "FACE_VALUE_SELECT"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-068",
+        "REF-091"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-NUMERIC-RESPONSE",
+      "name": "比例换算文字题交互适配器",
+      "baseSurfaces": [
+        "FORM_PANEL"
+      ],
+      "runtimeKernels": [
+        "STATIC_REASONING"
+      ],
+      "primaryInputs": [
+        "NUMBER_INPUT"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-002",
+        "REF-025",
+        "REF-032",
+        "REF-052",
+        "REF-061"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-PAIRED-CARRY-REARRANGE",
+      "name": "每次携带相邻一对的排列复原交互适配器",
+      "baseSurfaces": [
+        "SEQUENCE_STRIP"
+      ],
+      "runtimeKernels": [
+        "REARRANGEMENT"
+      ],
+      "primaryInputs": [
+        "PAIR_MOVE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-042"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-PAIRWISE-QUERY",
+      "name": "有限两两称量推断完整顺序交互适配器",
+      "baseSurfaces": [
+        "QUERY_TABLE"
+      ],
+      "runtimeKernels": [
+        "INFORMATION_DEDUCTION"
+      ],
+      "primaryInputs": [
+        "PAIR_SELECT"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-012"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-PARALLEL-TEXT-RULE",
+      "name": "平行文本比对破译符号交互适配器",
+      "baseSurfaces": [
+        "PARALLEL_TEXT"
+      ],
+      "runtimeKernels": [
+        "RULE_DISCOVERY"
+      ],
+      "primaryInputs": [
+        "SYMBOL_INPUT"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-079"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-PATH-VALUE-PLACEMENT",
+      "name": "不同步长对象的路径位置布置交互适配器",
+      "baseSurfaces": [
+        "PATH_BOARD"
+      ],
+      "runtimeKernels": [
+        "GRID_PLACEMENT"
+      ],
+      "primaryInputs": [
+        "OBJECT_PLACE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-045"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-PERSPECTIVE-COMPARE",
+      "name": "多视角透视深度判断交互适配器",
+      "baseSurfaces": [
+        "VISUAL_STAGE"
+      ],
+      "runtimeKernels": [
+        "VISUAL_INSPECTION"
+      ],
+      "primaryInputs": [
+        "VIEW_ROTATE_SELECT"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-053"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-PIPE-GRID",
+      "name": "使用全部管件组成单一连通管道交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "GRID_PLACEMENT"
+      ],
+      "primaryInputs": [
+        "PLACE_ROTATE",
+        "PANEL_REARRANGE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-034",
+        "REF-060"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-POLYOMINO-GRID",
+      "name": "带颜色邻接约束的多格块铺装交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "GRID_PLACEMENT"
+      ],
+      "primaryInputs": [
+        "DRAG_ROTATE",
+        "DRAG_PLACE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-014",
+        "REF-077"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-PROJECTION-COMPARE",
+      "name": "光源变化下的投影一致性交互适配器",
+      "baseSurfaces": [
+        "VISUAL_STAGE"
+      ],
+      "runtimeKernels": [
+        "VISUAL_INSPECTION"
+      ],
+      "primaryInputs": [
+        "LIGHT_ROTATE_SELECT"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-041"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-PYRAMID-NUMBER-GRID",
+      "name": "相邻差值生成上层的数字金字塔交互适配器",
+      "baseSurfaces": [
+        "PYRAMID_BOARD"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "NUMBER_INPUT"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-083"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-QUANTITY-ALLOCATION",
+      "name": "多对象线性数量关系分配交互适配器",
+      "baseSurfaces": [
+        "ASSIGNMENT_BOARD"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "VALUE_ASSIGN"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-036"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-RADIAL-SECTOR-ROTATION",
+      "name": "旋转光束连通并等面积分区交互适配器",
+      "baseSurfaces": [
+        "RADIAL_BOARD"
+      ],
+      "runtimeKernels": [
+        "LINE_REGION_GEOMETRY"
+      ],
+      "primaryInputs": [
+        "ROTATE"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-006"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-RAIL-YARD",
+      "name": "机车调度与车厢顺序复原交互适配器",
+      "baseSurfaces": [
+        "TRACK_STAGE"
+      ],
+      "runtimeKernels": [
+        "REARRANGEMENT"
+      ],
+      "primaryInputs": [
+        "SHUNT_MOVE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-038"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-REGION-ROTATION",
+      "name": "旋转分区使各区符号和相等交互适配器",
+      "baseSurfaces": [
+        "RADIAL_BOARD"
+      ],
+      "runtimeKernels": [
+        "ROTATION_CONSTRAINT"
+      ],
+      "primaryInputs": [
+        "ROTATE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-009"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-RING-ASSIGNMENT",
+      "name": "环上避免相邻连续数交互适配器",
+      "baseSurfaces": [
+        "RADIAL_BOARD"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "DRAG_PLACE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-070"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-RING-REARRANGE",
+      "name": "不同固定步长圆环令牌归位交互适配器",
+      "baseSurfaces": [
+        "RADIAL_BOARD"
+      ],
+      "runtimeKernels": [
+        "REARRANGEMENT"
+      ],
+      "primaryInputs": [
+        "TOKEN_MOVE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-090"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-RING-TOGGLE",
+      "name": "环形固定步长选择与状态翻转交互适配器",
+      "baseSurfaces": [
+        "RADIAL_BOARD"
+      ],
+      "runtimeKernels": [
+        "TOGGLE_NETWORK"
+      ],
+      "primaryInputs": [
+        "TOKEN_SELECT"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-066"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-ROAD-PANEL-ROUTE",
+      "name": "可重排道路的分阶段路线交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "DYNAMIC_GRID_ROUTE"
+      ],
+      "primaryInputs": [
+        "PANEL_REARRANGE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-046"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-ROTATE-COMPARE",
+      "name": "旋转图形精确匹配排除交互适配器",
+      "baseSurfaces": [
+        "VISUAL_STAGE"
+      ],
+      "runtimeKernels": [
+        "VISUAL_INSPECTION"
+      ],
+      "primaryInputs": [
+        "ROTATE_SELECT"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-004"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-ROTATE-OBSERVE",
+      "name": "旋转遮挡物的完整计数交互适配器",
+      "baseSurfaces": [
+        "VISUAL_STAGE"
+      ],
+      "runtimeKernels": [
+        "VISUAL_INSPECTION"
+      ],
+      "primaryInputs": [
+        "ROTATE_COUNT"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-035"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-ROW-COLUMN-SHIFT",
+      "name": "整行整列平移复原图像交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "GRID_TRANSFORM"
+      ],
+      "primaryInputs": [
+        "ROW_COLUMN_SHIFT"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-015"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-RULE-DISCOVERY-TABLE",
+      "name": "从输入输出样例推断隐藏映射交互适配器",
+      "baseSurfaces": [
+        "EXAMPLE_TABLE"
+      ],
+      "runtimeKernels": [
+        "RULE_DISCOVERY"
+      ],
+      "primaryInputs": [
+        "OPTION_SELECT"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-055"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-SCENE-IDENTITY",
+      "name": "遮挡场景中的多目标身份匹配交互适配器",
+      "baseSurfaces": [
+        "VISUAL_STAGE"
+      ],
+      "runtimeKernels": [
+        "VISUAL_INSPECTION"
+      ],
+      "primaryInputs": [
+        "IDENTITY_ASSIGN"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-048"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-SCHEDULE-MATRIX",
+      "name": "二元日序列与多维出现次数交互适配器",
+      "baseSurfaces": [
+        "MATRIX_BOARD"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "BINARY_ASSIGN",
+        "PAIR_ASSIGN"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-043",
+        "REF-051"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-SEGMENT-PARTITION",
+      "name": "相邻定长片段满足多组有序需求交互适配器",
+      "baseSurfaces": [
+        "SEQUENCE_STRIP",
+        "RADIAL_BOARD",
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "EXACT_COVER_PARTITION"
+      ],
+      "primaryInputs": [
+        "CUT_SELECT",
+        "PAIR_SELECT"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-023",
+        "REF-039",
+        "REF-080"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-SEQUENCE-PATH-CHOICE",
+      "name": "二维路径图案序列补全交互适配器",
+      "baseSurfaces": [
+        "SEQUENCE_STRIP"
+      ],
+      "runtimeKernels": [
+        "SEQUENCE_REASONING"
+      ],
+      "primaryInputs": [
+        "OPTION_SELECT"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-005"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-SOFT-SHAPE-PACKING",
+      "name": "不重叠软形状容器装填交互适配器",
+      "baseSurfaces": [
+        "FREE_CANVAS"
+      ],
+      "runtimeKernels": [
+        "PACKING_GEOMETRY"
+      ],
+      "primaryInputs": [
+        "DRAG_ROTATE"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-067"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-SPHERE-PROGRAM",
+      "name": "编码指令在球面路径上定位交互适配器",
+      "baseSurfaces": [
+        "SPHERE_STAGE"
+      ],
+      "runtimeKernels": [
+        "PROGRAM_EXECUTION"
+      ],
+      "primaryInputs": [
+        "MAP_AND_RUN"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-088"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-STACK-SORT",
+      "name": "容量限制下的多箱堆栈排序交互适配器",
+      "baseSurfaces": [
+        "STACK_BOARD"
+      ],
+      "runtimeKernels": [
+        "REARRANGEMENT"
+      ],
+      "primaryInputs": [
+        "STACK_MOVE"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-072"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-STATEMENT-TRUTH",
+      "name": "限定真话数量的责任推理交互适配器",
+      "baseSurfaces": [
+        "STATEMENT_PANEL",
+        "ASSIGNMENT_BOARD"
+      ],
+      "runtimeKernels": [
+        "CSP_ASSIGNMENT"
+      ],
+      "primaryInputs": [
+        "SUSPECT_SELECT",
+        "OBJECT_ASSIGN"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-056",
+        "REF-062"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-STEALTH-GRID",
+      "name": "视线守卫下的潜行与侧后消除交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "DYNAMIC_GRID_ROUTE"
+      ],
+      "primaryInputs": [
+        "DIRECTION_INPUT"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-093"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-SYMBOL-PROGRAM",
+      "name": "符号到指令的映射编程交互适配器",
+      "baseSurfaces": [
+        "PROGRAM_PANEL"
+      ],
+      "runtimeKernels": [
+        "PROGRAM_EXECUTION"
+      ],
+      "primaryInputs": [
+        "MAP_AND_RUN"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-027",
+        "REF-084"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-SYNCHRONIZED-ROUTE",
+      "name": "同步角色与条件自动移动交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "MULTI_AGENT_ROUTE"
+      ],
+      "primaryInputs": [
+        "SHARED_DIRECTION"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-026"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-TEXT-RELATION-CHOICE",
+      "name": "邻接与否定条件人物归属交互适配器",
+      "baseSurfaces": [
+        "FORM_PANEL"
+      ],
+      "runtimeKernels": [
+        "STATIC_REASONING"
+      ],
+      "primaryInputs": [
+        "OPTION_SELECT"
+      ],
+      "visualDependency": "LOW",
+      "mechanismIds": [
+        "REF-021"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-TIMED-GRID-ROUTE",
+      "name": "周期障碍下的时序移动交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "TIME_EXPANDED_ROUTE"
+      ],
+      "primaryInputs": [
+        "DIRECTION_WAIT"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-010",
+        "REF-095"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-VESSEL-TRANSFER",
+      "name": "定容器皿量取目标体积交互适配器",
+      "baseSurfaces": [
+        "OBJECT_STAGE"
+      ],
+      "runtimeKernels": [
+        "MEASUREMENT_TRANSFER"
+      ],
+      "primaryInputs": [
+        "POUR_SELECT"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-011"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-VISUAL-TRACE",
+      "name": "沿视觉路径寻找物理阻断点交互适配器",
+      "baseSurfaces": [
+        "VISUAL_STAGE"
+      ],
+      "runtimeKernels": [
+        "VISUAL_INSPECTION"
+      ],
+      "primaryInputs": [
+        "POINT_SELECT",
+        "ENDPOINT_SELECT"
+      ],
+      "visualDependency": "HIGH",
+      "mechanismIds": [
+        "REF-022",
+        "REF-073"
+      ],
+      "reuseClass": "SHARED_ADAPTER",
+      "productionStrategy": "CURATED_HYBRID",
+      "app": true,
+      "wechat": true
+    },
+    {
+      "id": "ADP-WEIGHTED-OUTLINE",
+      "name": "方形轮廓上的等权重布局交互适配器",
+      "baseSurfaces": [
+        "GRID_BOARD"
+      ],
+      "runtimeKernels": [
+        "GRID_PLACEMENT"
+      ],
+      "primaryInputs": [
+        "OBJECT_PLACE"
+      ],
+      "visualDependency": "MEDIUM",
+      "mechanismIds": [
+        "REF-054"
+      ],
+      "reuseClass": "DEDICATED_ADAPTER",
+      "productionStrategy": "BATCH_PROCEDURAL",
+      "app": true,
+      "wechat": true
+    }
+  ],
+  "mappings": [
+    {
+      "mechanismId": "REF-001",
+      "mechanismName": "有限燃料补给路径",
+      "runtimeKernel": "RESOURCE_ROUTE",
+      "adapterId": "ADP-GRAPH-RESOURCE-ROUTE",
+      "baseSurface": "GRAPH_BOARD",
+      "primaryInput": "MOVE_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        1,
+        30,
+        134
+      ]
+    },
+    {
+      "mechanismId": "REF-002",
+      "mechanismName": "比例换算文字题",
+      "runtimeKernel": "STATIC_REASONING",
+      "adapterId": "ADP-NUMERIC-RESPONSE",
+      "baseSurface": "FORM_PANEL",
+      "primaryInput": "NUMBER_INPUT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        2
+      ]
+    },
+    {
+      "mechanismId": "REF-003",
+      "mechanismName": "覆盖且同色射线不相交",
+      "runtimeKernel": "GEOMETRIC_PLACEMENT",
+      "adapterId": "ADP-FREE-RAY-PLACEMENT",
+      "baseSurface": "FREE_CANVAS",
+      "primaryInput": "DRAG_ROTATE",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        3,
+        107,
+        156
+      ]
+    },
+    {
+      "mechanismId": "REF-004",
+      "mechanismName": "旋转图形精确匹配排除",
+      "runtimeKernel": "VISUAL_INSPECTION",
+      "adapterId": "ADP-ROTATE-COMPARE",
+      "baseSurface": "VISUAL_STAGE",
+      "primaryInput": "ROTATE_SELECT",
+      "visualDependency": "HIGH",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        4
+      ]
+    },
+    {
+      "mechanismId": "REF-005",
+      "mechanismName": "二维路径图案序列补全",
+      "runtimeKernel": "SEQUENCE_REASONING",
+      "adapterId": "ADP-SEQUENCE-PATH-CHOICE",
+      "baseSurface": "SEQUENCE_STRIP",
+      "primaryInput": "OPTION_SELECT",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        5
+      ]
+    },
+    {
+      "mechanismId": "REF-006",
+      "mechanismName": "旋转光束连通并等面积分区",
+      "runtimeKernel": "LINE_REGION_GEOMETRY",
+      "adapterId": "ADP-RADIAL-SECTOR-ROTATION",
+      "baseSurface": "RADIAL_BOARD",
+      "primaryInput": "ROTATE",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        6
+      ]
+    },
+    {
+      "mechanismId": "REF-007",
+      "mechanismName": "连续跳跃并翻转被跨越棋子",
+      "runtimeKernel": "TOKEN_TRANSITION",
+      "adapterId": "ADP-JUMP-TOKEN-BOARD",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "TOKEN_MOVE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        7,
+        118,
+        163
+      ]
+    },
+    {
+      "mechanismId": "REF-008",
+      "mechanismName": "碰撞滑行与落穴填充",
+      "runtimeKernel": "SLIDING_PHYSICS",
+      "adapterId": "ADP-MOMENTUM-SLIDE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "DIRECTION_INPUT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        8,
+        86,
+        154
+      ]
+    },
+    {
+      "mechanismId": "REF-009",
+      "mechanismName": "旋转分区使各区符号和相等",
+      "runtimeKernel": "ROTATION_CONSTRAINT",
+      "adapterId": "ADP-REGION-ROTATION",
+      "baseSurface": "RADIAL_BOARD",
+      "primaryInput": "ROTATE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        9,
+        115
+      ]
+    },
+    {
+      "mechanismId": "REF-010",
+      "mechanismName": "周期障碍下的时序移动",
+      "runtimeKernel": "TIME_EXPANDED_ROUTE",
+      "adapterId": "ADP-TIMED-GRID-ROUTE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "DIRECTION_WAIT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        10,
+        116,
+        157
+      ]
+    },
+    {
+      "mechanismId": "REF-011",
+      "mechanismName": "定容器皿量取目标体积",
+      "runtimeKernel": "MEASUREMENT_TRANSFER",
+      "adapterId": "ADP-VESSEL-TRANSFER",
+      "baseSurface": "OBJECT_STAGE",
+      "primaryInput": "POUR_SELECT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        11,
+        117
+      ]
+    },
+    {
+      "mechanismId": "REF-012",
+      "mechanismName": "有限两两称量推断完整顺序",
+      "runtimeKernel": "INFORMATION_DEDUCTION",
+      "adapterId": "ADP-PAIRWISE-QUERY",
+      "baseSurface": "QUERY_TABLE",
+      "primaryInput": "PAIR_SELECT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        12
+      ]
+    },
+    {
+      "mechanismId": "REF-013",
+      "mechanismName": "接触图着色",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-GRAPH-COLORING",
+      "baseSurface": "GRAPH_BOARD",
+      "primaryInput": "COLOR_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        13
+      ]
+    },
+    {
+      "mechanismId": "REF-014",
+      "mechanismName": "带颜色邻接约束的多格块铺装",
+      "runtimeKernel": "GRID_PLACEMENT",
+      "adapterId": "ADP-POLYOMINO-GRID",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "DRAG_ROTATE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        14,
+        46,
+        159
+      ]
+    },
+    {
+      "mechanismId": "REF-015",
+      "mechanismName": "整行整列平移复原图像",
+      "runtimeKernel": "GRID_TRANSFORM",
+      "adapterId": "ADP-ROW-COLUMN-SHIFT",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "ROW_COLUMN_SHIFT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        15,
+        89,
+        103
+      ]
+    },
+    {
+      "mechanismId": "REF-016",
+      "mechanismName": "自由拼块还原目标轮廓",
+      "runtimeKernel": "PIECE_ASSEMBLY",
+      "adapterId": "ADP-FREE-PIECE-ASSEMBLY",
+      "baseSurface": "FREE_CANVAS",
+      "primaryInput": "DRAG_ROTATE",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        16,
+        56
+      ]
+    },
+    {
+      "mechanismId": "REF-017",
+      "mechanismName": "踩踏后持续滑行的移动平台路线",
+      "runtimeKernel": "DYNAMIC_GRID_ROUTE",
+      "adapterId": "ADP-DYNAMIC-GRID-ROUTE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "DIRECTION_INPUT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        17,
+        82
+      ]
+    },
+    {
+      "mechanismId": "REF-018",
+      "mechanismName": "有限直线最大分区并隔离目标",
+      "runtimeKernel": "LINE_REGION_GEOMETRY",
+      "adapterId": "ADP-LINE-REGION-DRAW",
+      "baseSurface": "FREE_CANVAS",
+      "primaryInput": "LINE_DRAW",
+      "visualDependency": "MEDIUM",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        18
+      ]
+    },
+    {
+      "mechanismId": "REF-019",
+      "mechanismName": "固定尺寸彩色图层叠加成图",
+      "runtimeKernel": "LAYER_COMPOSITING",
+      "adapterId": "ADP-LAYER-STACK",
+      "baseSurface": "LAYER_STAGE",
+      "primaryInput": "DRAG_REORDER",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        19,
+        27,
+        91
+      ]
+    },
+    {
+      "mechanismId": "REF-020",
+      "mechanismName": "不同速度移动载具的定时换乘",
+      "runtimeKernel": "TIME_EXPANDED_ROUTE",
+      "adapterId": "ADP-CARRIER-TIMELINE",
+      "baseSurface": "GRAPH_TIMELINE",
+      "primaryInput": "WAIT_TRANSFER",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        20,
+        60
+      ]
+    },
+    {
+      "mechanismId": "REF-021",
+      "mechanismName": "邻接与否定条件人物归属",
+      "runtimeKernel": "STATIC_REASONING",
+      "adapterId": "ADP-TEXT-RELATION-CHOICE",
+      "baseSurface": "FORM_PANEL",
+      "primaryInput": "OPTION_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        21
+      ]
+    },
+    {
+      "mechanismId": "REF-022",
+      "mechanismName": "沿视觉路径寻找物理阻断点",
+      "runtimeKernel": "VISUAL_INSPECTION",
+      "adapterId": "ADP-VISUAL-TRACE",
+      "baseSurface": "VISUAL_STAGE",
+      "primaryInput": "POINT_SELECT",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        22
+      ]
+    },
+    {
+      "mechanismId": "REF-023",
+      "mechanismName": "相邻定长片段满足多组有序需求",
+      "runtimeKernel": "EXACT_COVER_PARTITION",
+      "adapterId": "ADP-SEGMENT-PARTITION",
+      "baseSurface": "SEQUENCE_STRIP",
+      "primaryInput": "CUT_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        23
+      ]
+    },
+    {
+      "mechanismId": "REF-024",
+      "mechanismName": "公交网络陈述反推共同目标",
+      "runtimeKernel": "GRAPH_DEDUCTION",
+      "adapterId": "ADP-GRAPH-DEDUCTION",
+      "baseSurface": "GRAPH_BOARD",
+      "primaryInput": "NODE_EDGE_SELECT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        24
+      ]
+    },
+    {
+      "mechanismId": "REF-025",
+      "mechanismName": "有限集合和的唯一缺口",
+      "runtimeKernel": "STATIC_REASONING",
+      "adapterId": "ADP-NUMERIC-RESPONSE",
+      "baseSurface": "FORM_PANEL",
+      "primaryInput": "NUMBER_INPUT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        25
+      ]
+    },
+    {
+      "mechanismId": "REF-026",
+      "mechanismName": "同步角色与条件自动移动",
+      "runtimeKernel": "MULTI_AGENT_ROUTE",
+      "adapterId": "ADP-SYNCHRONIZED-ROUTE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "SHARED_DIRECTION",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        26,
+        114
+      ]
+    },
+    {
+      "mechanismId": "REF-027",
+      "mechanismName": "符号到指令的映射编程",
+      "runtimeKernel": "PROGRAM_EXECUTION",
+      "adapterId": "ADP-SYMBOL-PROGRAM",
+      "baseSurface": "PROGRAM_PANEL",
+      "primaryInput": "MAP_AND_RUN",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        28,
+        100,
+        136
+      ]
+    },
+    {
+      "mechanismId": "REF-028",
+      "mechanismName": "区间覆盖最少资源",
+      "runtimeKernel": "STATIC_REASONING",
+      "adapterId": "ADP-INTERVAL-RESOURCE-SELECT",
+      "baseSurface": "TIMELINE_STRIP",
+      "primaryInput": "RANGE_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        29
+      ]
+    },
+    {
+      "mechanismId": "REF-029",
+      "mechanismName": "复杂纹样中的隐藏形状选择",
+      "runtimeKernel": "VISUAL_INSPECTION",
+      "adapterId": "ADP-HIDDEN-SHAPE-SELECT",
+      "baseSurface": "VISUAL_STAGE",
+      "primaryInput": "SHAPE_SELECT",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        31
+      ]
+    },
+    {
+      "mechanismId": "REF-030",
+      "mechanismName": "行列计数约束下的多格块放置",
+      "runtimeKernel": "GRID_PLACEMENT",
+      "adapterId": "ADP-COUNT-GUIDED-GRID",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "DRAG_ROTATE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        32,
+        69,
+        88
+      ]
+    },
+    {
+      "mechanismId": "REF-031",
+      "mechanismName": "无重复路线与精确消费总额",
+      "runtimeKernel": "RESOURCE_ROUTE",
+      "adapterId": "ADP-GRAPH-RESOURCE-ROUTE",
+      "baseSurface": "GRAPH_BOARD",
+      "primaryInput": "MOVE_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        33
+      ]
+    },
+    {
+      "mechanismId": "REF-032",
+      "mechanismName": "等速率区间换算",
+      "runtimeKernel": "STATIC_REASONING",
+      "adapterId": "ADP-NUMERIC-RESPONSE",
+      "baseSurface": "FORM_PANEL",
+      "primaryInput": "NUMBER_INPUT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        34
+      ]
+    },
+    {
+      "mechanismId": "REF-033",
+      "mechanismName": "从候选碎片重建参考图",
+      "runtimeKernel": "PIECE_ASSEMBLY",
+      "adapterId": "ADP-FRAGMENT-SELECTION",
+      "baseSurface": "ASSEMBLY_STAGE",
+      "primaryInput": "SELECT_PLACE",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        35
+      ]
+    },
+    {
+      "mechanismId": "REF-034",
+      "mechanismName": "使用全部管件组成单一连通管道",
+      "runtimeKernel": "GRID_PLACEMENT",
+      "adapterId": "ADP-PIPE-GRID",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "PLACE_ROTATE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        36,
+        37,
+        151
+      ]
+    },
+    {
+      "mechanismId": "REF-035",
+      "mechanismName": "旋转遮挡物的完整计数",
+      "runtimeKernel": "VISUAL_INSPECTION",
+      "adapterId": "ADP-ROTATE-OBSERVE",
+      "baseSurface": "VISUAL_STAGE",
+      "primaryInput": "ROTATE_COUNT",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        38,
+        92
+      ]
+    },
+    {
+      "mechanismId": "REF-036",
+      "mechanismName": "多对象线性数量关系分配",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-QUANTITY-ALLOCATION",
+      "baseSurface": "ASSIGNMENT_BOARD",
+      "primaryInput": "VALUE_ASSIGN",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        39
+      ]
+    },
+    {
+      "mechanismId": "REF-037",
+      "mechanismName": "多角色依次收集不可再生资源",
+      "runtimeKernel": "RESOURCE_ROUTE",
+      "adapterId": "ADP-GRAPH-RESOURCE-ROUTE",
+      "baseSurface": "GRAPH_BOARD",
+      "primaryInput": "MOVE_SELECT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        40,
+        48
+      ]
+    },
+    {
+      "mechanismId": "REF-038",
+      "mechanismName": "机车调度与车厢顺序复原",
+      "runtimeKernel": "REARRANGEMENT",
+      "adapterId": "ADP-RAIL-YARD",
+      "baseSurface": "TRACK_STAGE",
+      "primaryInput": "SHUNT_MOVE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        41,
+        113,
+        128
+      ]
+    },
+    {
+      "mechanismId": "REF-039",
+      "mechanismName": "环形相邻定长分组等和",
+      "runtimeKernel": "EXACT_COVER_PARTITION",
+      "adapterId": "ADP-SEGMENT-PARTITION",
+      "baseSurface": "RADIAL_BOARD",
+      "primaryInput": "CUT_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        42,
+        57,
+        133
+      ]
+    },
+    {
+      "mechanismId": "REF-040",
+      "mechanismName": "经过全部锚点的单环内外分离",
+      "runtimeKernel": "LINE_REGION_GEOMETRY",
+      "adapterId": "ADP-LINE-REGION-DRAW",
+      "baseSurface": "FREE_CANVAS",
+      "primaryInput": "ANCHOR_CONNECT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        43,
+        135
+      ]
+    },
+    {
+      "mechanismId": "REF-041",
+      "mechanismName": "光源变化下的投影一致性",
+      "runtimeKernel": "VISUAL_INSPECTION",
+      "adapterId": "ADP-PROJECTION-COMPARE",
+      "baseSurface": "VISUAL_STAGE",
+      "primaryInput": "LIGHT_ROTATE_SELECT",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        44
+      ]
+    },
+    {
+      "mechanismId": "REF-042",
+      "mechanismName": "每次携带相邻一对的排列复原",
+      "runtimeKernel": "REARRANGEMENT",
+      "adapterId": "ADP-PAIRED-CARRY-REARRANGE",
+      "baseSurface": "SEQUENCE_STRIP",
+      "primaryInput": "PAIR_MOVE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        45,
+        51,
+        130
+      ]
+    },
+    {
+      "mechanismId": "REF-043",
+      "mechanismName": "二元日序列与多维出现次数",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-SCHEDULE-MATRIX",
+      "baseSurface": "MATRIX_BOARD",
+      "primaryInput": "BINARY_ASSIGN",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        47
+      ]
+    },
+    {
+      "mechanismId": "REF-044",
+      "mechanismName": "数量颜色与空间邻接联合分配",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-ATTRIBUTE-SPATIAL-BOARD",
+      "baseSurface": "ASSIGNMENT_BOARD",
+      "primaryInput": "OBJECT_PLACE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        49
+      ]
+    },
+    {
+      "mechanismId": "REF-045",
+      "mechanismName": "不同步长对象的路径位置布置",
+      "runtimeKernel": "GRID_PLACEMENT",
+      "adapterId": "ADP-PATH-VALUE-PLACEMENT",
+      "baseSurface": "PATH_BOARD",
+      "primaryInput": "OBJECT_PLACE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        50,
+        131
+      ]
+    },
+    {
+      "mechanismId": "REF-046",
+      "mechanismName": "可重排道路的分阶段路线",
+      "runtimeKernel": "DYNAMIC_GRID_ROUTE",
+      "adapterId": "ADP-ROAD-PANEL-ROUTE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "PANEL_REARRANGE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        52,
+        132
+      ]
+    },
+    {
+      "mechanismId": "REF-047",
+      "mechanismName": "方向敏感的连锁倒塌",
+      "runtimeKernel": "SEQUENCE_SIMULATION",
+      "adapterId": "ADP-CHAIN-SEQUENCE-SIM",
+      "baseSurface": "OBJECT_STAGE",
+      "primaryInput": "TRIGGER_SELECT",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        53
+      ]
+    },
+    {
+      "mechanismId": "REF-048",
+      "mechanismName": "遮挡场景中的多目标身份匹配",
+      "runtimeKernel": "VISUAL_INSPECTION",
+      "adapterId": "ADP-SCENE-IDENTITY",
+      "baseSurface": "VISUAL_STAGE",
+      "primaryInput": "IDENTITY_ASSIGN",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        54
+      ]
+    },
+    {
+      "mechanismId": "REF-049",
+      "mechanismName": "多条自然语言限制下的顺序选择",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-LINEUP-ASSIGNMENT",
+      "baseSurface": "SEQUENCE_STRIP",
+      "primaryInput": "DRAG_PLACE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        55,
+        90
+      ]
+    },
+    {
+      "mechanismId": "REF-050",
+      "mechanismName": "有限传递距离和空位的标记重排",
+      "runtimeKernel": "REARRANGEMENT",
+      "adapterId": "ADP-DISTANCE-REARRANGE",
+      "baseSurface": "SEQUENCE_STRIP",
+      "primaryInput": "TOKEN_MOVE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        58,
+        62,
+        123
+      ]
+    },
+    {
+      "mechanismId": "REF-051",
+      "mechanismName": "两日异伴异地点配对",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-SCHEDULE-MATRIX",
+      "baseSurface": "MATRIX_BOARD",
+      "primaryInput": "PAIR_ASSIGN",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        59
+      ]
+    },
+    {
+      "mechanismId": "REF-052",
+      "mechanismName": "流水账逆向恢复初始数量",
+      "runtimeKernel": "STATIC_REASONING",
+      "adapterId": "ADP-NUMERIC-RESPONSE",
+      "baseSurface": "FORM_PANEL",
+      "primaryInput": "NUMBER_INPUT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        61
+      ]
+    },
+    {
+      "mechanismId": "REF-053",
+      "mechanismName": "多视角透视深度判断",
+      "runtimeKernel": "VISUAL_INSPECTION",
+      "adapterId": "ADP-PERSPECTIVE-COMPARE",
+      "baseSurface": "VISUAL_STAGE",
+      "primaryInput": "VIEW_ROTATE_SELECT",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        63
+      ]
+    },
+    {
+      "mechanismId": "REF-054",
+      "mechanismName": "方形轮廓上的等权重布局",
+      "runtimeKernel": "GRID_PLACEMENT",
+      "adapterId": "ADP-WEIGHTED-OUTLINE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "OBJECT_PLACE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        64,
+        141
+      ]
+    },
+    {
+      "mechanismId": "REF-055",
+      "mechanismName": "从输入输出样例推断隐藏映射",
+      "runtimeKernel": "RULE_DISCOVERY",
+      "adapterId": "ADP-RULE-DISCOVERY-TABLE",
+      "baseSurface": "EXAMPLE_TABLE",
+      "primaryInput": "OPTION_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        65
+      ]
+    },
+    {
+      "mechanismId": "REF-056",
+      "mechanismName": "限定真话数量的责任推理",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-STATEMENT-TRUTH",
+      "baseSurface": "STATEMENT_PANEL",
+      "primaryInput": "SUSPECT_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        66
+      ]
+    },
+    {
+      "mechanismId": "REF-057",
+      "mechanismName": "同组自由拼片变换目标轮廓",
+      "runtimeKernel": "PIECE_ASSEMBLY",
+      "adapterId": "ADP-FREE-PIECE-ASSEMBLY",
+      "baseSurface": "FREE_CANVAS",
+      "primaryInput": "DRAG_ROTATE",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        67
+      ]
+    },
+    {
+      "mechanismId": "REF-058",
+      "mechanismName": "单跳移除棋子的中心收束",
+      "runtimeKernel": "TOKEN_TRANSITION",
+      "adapterId": "ADP-JUMP-TOKEN-BOARD",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "TOKEN_MOVE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        68,
+        71,
+        155
+      ]
+    },
+    {
+      "mechanismId": "REF-059",
+      "mechanismName": "复合图形中的正方形计数",
+      "runtimeKernel": "VISUAL_INSPECTION",
+      "adapterId": "ADP-HIDDEN-SHAPE-SELECT",
+      "baseSurface": "VISUAL_STAGE",
+      "primaryInput": "COUNT_INPUT",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        70
+      ]
+    },
+    {
+      "mechanismId": "REF-060",
+      "mechanismName": "重排道路面板连接成对端点",
+      "runtimeKernel": "GRID_PLACEMENT",
+      "adapterId": "ADP-PIPE-GRID",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "PANEL_REARRANGE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        72,
+        127
+      ]
+    },
+    {
+      "mechanismId": "REF-061",
+      "mechanismName": "多模余数条件恢复整数",
+      "runtimeKernel": "STATIC_REASONING",
+      "adapterId": "ADP-NUMERIC-RESPONSE",
+      "baseSurface": "FORM_PANEL",
+      "primaryInput": "NUMBER_INPUT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        73
+      ]
+    },
+    {
+      "mechanismId": "REF-062",
+      "mechanismName": "带析取或假线索的唯一分配",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-STATEMENT-TRUTH",
+      "baseSurface": "ASSIGNMENT_BOARD",
+      "primaryInput": "OBJECT_ASSIGN",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        74,
+        126
+      ]
+    },
+    {
+      "mechanismId": "REF-063",
+      "mechanismName": "离散配比达到隐藏目标区间",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-MIXTURE-CONTROL",
+      "baseSurface": "CONTROL_PANEL",
+      "primaryInput": "VALUE_ADJUST",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        75,
+        80
+      ]
+    },
+    {
+      "mechanismId": "REF-064",
+      "mechanismName": "障碍区域中的自由拼块桥接",
+      "runtimeKernel": "GEOMETRIC_PLACEMENT",
+      "adapterId": "ADP-FREE-BRIDGE-PLACEMENT",
+      "baseSurface": "FREE_CANVAS",
+      "primaryInput": "DRAG_ROTATE",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        76,
+        95,
+        102
+      ]
+    },
+    {
+      "mechanismId": "REF-065",
+      "mechanismName": "交替采集序列与不可重复边路线",
+      "runtimeKernel": "GRAPH_ROUTE",
+      "adapterId": "ADP-GRAPH-RESOURCE-ROUTE",
+      "baseSurface": "GRAPH_BOARD",
+      "primaryInput": "EDGE_MOVE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        77
+      ]
+    },
+    {
+      "mechanismId": "REF-066",
+      "mechanismName": "环形固定步长选择与状态翻转",
+      "runtimeKernel": "TOGGLE_NETWORK",
+      "adapterId": "ADP-RING-TOGGLE",
+      "baseSurface": "RADIAL_BOARD",
+      "primaryInput": "TOKEN_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        78
+      ]
+    },
+    {
+      "mechanismId": "REF-067",
+      "mechanismName": "不重叠软形状容器装填",
+      "runtimeKernel": "PACKING_GEOMETRY",
+      "adapterId": "ADP-SOFT-SHAPE-PACKING",
+      "baseSurface": "FREE_CANVAS",
+      "primaryInput": "DRAG_ROTATE",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        79,
+        83
+      ]
+    },
+    {
+      "mechanismId": "REF-068",
+      "mechanismName": "立体展开面的对应位置",
+      "runtimeKernel": "SPATIAL_TRANSFORM",
+      "adapterId": "ADP-NET-FOLD",
+      "baseSurface": "FOLDING_STAGE",
+      "primaryInput": "FACE_SELECT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        81
+      ]
+    },
+    {
+      "mechanismId": "REF-069",
+      "mechanismName": "多源最短距离约束放置",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-DISTANCE-GRID-ASSIGN",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "OBJECT_PLACE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        84,
+        140
+      ]
+    },
+    {
+      "mechanismId": "REF-070",
+      "mechanismName": "环上避免相邻连续数",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-RING-ASSIGNMENT",
+      "baseSurface": "RADIAL_BOARD",
+      "primaryInput": "DRAG_PLACE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        85
+      ]
+    },
+    {
+      "mechanismId": "REF-071",
+      "mechanismName": "分片等和恢复钟面朝向",
+      "runtimeKernel": "STATIC_REASONING",
+      "adapterId": "ADP-CLOCK-SEGMENT-ROTATE",
+      "baseSurface": "RADIAL_BOARD",
+      "primaryInput": "SEGMENT_ROTATE",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        87
+      ]
+    },
+    {
+      "mechanismId": "REF-072",
+      "mechanismName": "容量限制下的多箱堆栈排序",
+      "runtimeKernel": "REARRANGEMENT",
+      "adapterId": "ADP-STACK-SORT",
+      "baseSurface": "STACK_BOARD",
+      "primaryInput": "STACK_MOVE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        93,
+        111,
+        125
+      ]
+    },
+    {
+      "mechanismId": "REF-073",
+      "mechanismName": "复杂缠绕线的端点追踪",
+      "runtimeKernel": "VISUAL_INSPECTION",
+      "adapterId": "ADP-VISUAL-TRACE",
+      "baseSurface": "VISUAL_STAGE",
+      "primaryInput": "ENDPOINT_SELECT",
+      "visualDependency": "HIGH",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        94,
+        106
+      ]
+    },
+    {
+      "mechanismId": "REF-074",
+      "mechanismName": "立方体展开网格精确覆盖",
+      "runtimeKernel": "EXACT_COVER_PARTITION",
+      "adapterId": "ADP-NET-COVER",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "NET_SELECT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        96,
+        110
+      ]
+    },
+    {
+      "mechanismId": "REF-075",
+      "mechanismName": "总重与件数约束的多组分配",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-GROUP-ALLOCATION",
+      "baseSurface": "ASSIGNMENT_BOARD",
+      "primaryInput": "OBJECT_ASSIGN",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        97
+      ]
+    },
+    {
+      "mechanismId": "REF-076",
+      "mechanismName": "边界属性匹配拼图与多余片",
+      "runtimeKernel": "PIECE_ASSEMBLY",
+      "adapterId": "ADP-EDGE-PIECE-ASSEMBLY",
+      "baseSurface": "ASSEMBLY_STAGE",
+      "primaryInput": "DRAG_ROTATE_DISCARD",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        98,
+        137
+      ]
+    },
+    {
+      "mechanismId": "REF-077",
+      "mechanismName": "固定件与异色邻接组成目标图形",
+      "runtimeKernel": "GRID_PLACEMENT",
+      "adapterId": "ADP-POLYOMINO-GRID",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "DRAG_PLACE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        99
+      ]
+    },
+    {
+      "mechanismId": "REF-078",
+      "mechanismName": "重叠邻域和的平衡排列",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-NEIGHBORHOOD-SUM-GRID",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "VALUE_PLACE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        101,
+        138
+      ]
+    },
+    {
+      "mechanismId": "REF-079",
+      "mechanismName": "平行文本比对破译符号",
+      "runtimeKernel": "RULE_DISCOVERY",
+      "adapterId": "ADP-PARALLEL-TEXT-RULE",
+      "baseSurface": "PARALLEL_TEXT",
+      "primaryInput": "SYMBOL_INPUT",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        104
+      ]
+    },
+    {
+      "mechanismId": "REF-080",
+      "mechanismName": "相邻配对且组合不重复的分割",
+      "runtimeKernel": "EXACT_COVER_PARTITION",
+      "adapterId": "ADP-SEGMENT-PARTITION",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "PAIR_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        105
+      ]
+    },
+    {
+      "mechanismId": "REF-081",
+      "mechanismName": "时间奇偶条件下的必经边",
+      "runtimeKernel": "GRAPH_DEDUCTION",
+      "adapterId": "ADP-GRAPH-DEDUCTION",
+      "baseSurface": "GRAPH_BOARD",
+      "primaryInput": "EDGE_SELECT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        108
+      ]
+    },
+    {
+      "mechanismId": "REF-082",
+      "mechanismName": "惯性滑行与一次性脆弱地面",
+      "runtimeKernel": "DYNAMIC_GRID_ROUTE",
+      "adapterId": "ADP-DYNAMIC-GRID-ROUTE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "DIRECTION_INPUT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        109,
+        124
+      ]
+    },
+    {
+      "mechanismId": "REF-083",
+      "mechanismName": "相邻差值生成上层的数字金字塔",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-PYRAMID-NUMBER-GRID",
+      "baseSurface": "PYRAMID_BOARD",
+      "primaryInput": "NUMBER_INPUT",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        112,
+        139,
+        158
+      ]
+    },
+    {
+      "mechanismId": "REF-084",
+      "mechanismName": "相对朝向指令追踪",
+      "runtimeKernel": "PROGRAM_EXECUTION",
+      "adapterId": "ADP-SYMBOL-PROGRAM",
+      "baseSurface": "PROGRAM_PANEL",
+      "primaryInput": "MAP_AND_RUN",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        119
+      ]
+    },
+    {
+      "mechanismId": "REF-085",
+      "mechanismName": "碰撞反射并旋转反射板",
+      "runtimeKernel": "BEAM_REFLECTION",
+      "adapterId": "ADP-BEAM-REFLECTION",
+      "baseSurface": "BEAM_STAGE",
+      "primaryInput": "LAUNCH_ROTATE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        120,
+        122,
+        164
+      ]
+    },
+    {
+      "mechanismId": "REF-086",
+      "mechanismName": "行列计数的固定数量二元选择",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "adapterId": "ADP-COUNT-GUIDED-GRID",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "BINARY_TOGGLE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        121,
+        152
+      ]
+    },
+    {
+      "mechanismId": "REF-087",
+      "mechanismName": "拥挤空间中的目标块移出",
+      "runtimeKernel": "SLIDING_PHYSICS",
+      "adapterId": "ADP-MOMENTUM-SLIDE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "BLOCK_SLIDE",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        129,
+        165
+      ]
+    },
+    {
+      "mechanismId": "REF-088",
+      "mechanismName": "编码指令在球面路径上定位",
+      "runtimeKernel": "PROGRAM_EXECUTION",
+      "adapterId": "ADP-SPHERE-PROGRAM",
+      "baseSurface": "SPHERE_STAGE",
+      "primaryInput": "MAP_AND_RUN",
+      "visualDependency": "HIGH",
+      "generationFit": "HYBRID",
+      "referencePuzzles": [
+        142
+      ]
+    },
+    {
+      "mechanismId": "REF-089",
+      "mechanismName": "可平移形状掩模的网格翻转",
+      "runtimeKernel": "TOGGLE_NETWORK",
+      "adapterId": "ADP-MASK-TOGGLE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "MASK_DRAG_TOGGLE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        143
+      ]
+    },
+    {
+      "mechanismId": "REF-090",
+      "mechanismName": "不同固定步长圆环令牌归位",
+      "runtimeKernel": "REARRANGEMENT",
+      "adapterId": "ADP-RING-REARRANGE",
+      "baseSurface": "RADIAL_BOARD",
+      "primaryInput": "TOKEN_MOVE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        144
+      ]
+    },
+    {
+      "mechanismId": "REF-091",
+      "mechanismName": "立方体展开面与对面数字",
+      "runtimeKernel": "SPATIAL_TRANSFORM",
+      "adapterId": "ADP-NET-FOLD",
+      "baseSurface": "FOLDING_STAGE",
+      "primaryInput": "FACE_VALUE_SELECT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        145
+      ]
+    },
+    {
+      "mechanismId": "REF-092",
+      "mechanismName": "坍塌路径上收集全部开关",
+      "runtimeKernel": "DYNAMIC_GRID_ROUTE",
+      "adapterId": "ADP-DYNAMIC-GRID-ROUTE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "DIRECTION_INPUT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        146,
+        160
+      ]
+    },
+    {
+      "mechanismId": "REF-093",
+      "mechanismName": "视线守卫下的潜行与侧后消除",
+      "runtimeKernel": "DYNAMIC_GRID_ROUTE",
+      "adapterId": "ADP-STEALTH-GRID",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "DIRECTION_INPUT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        147,
+        153
+      ]
+    },
+    {
+      "mechanismId": "REF-094",
+      "mechanismName": "旋转局部方块重建连续通道",
+      "runtimeKernel": "GRID_TRANSFORM",
+      "adapterId": "ADP-LOCAL-ROTATION-GRID",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "REGION_ROTATE",
+      "visualDependency": "LOW",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        148,
+        161
+      ]
+    },
+    {
+      "mechanismId": "REF-095",
+      "mechanismName": "周期旋转危险与不可回头地板",
+      "runtimeKernel": "TIME_EXPANDED_ROUTE",
+      "adapterId": "ADP-TIMED-GRID-ROUTE",
+      "baseSurface": "GRID_BOARD",
+      "primaryInput": "DIRECTION_WAIT",
+      "visualDependency": "MEDIUM",
+      "generationFit": "PROCEDURAL",
+      "referencePuzzles": [
+        149,
+        162
+      ]
+    },
+    {
+      "mechanismId": "REF-096",
+      "mechanismName": "叙事提示驱动的符号状态机",
+      "runtimeKernel": "TOGGLE_NETWORK",
+      "adapterId": "ADP-NARRATIVE-STATE-MACHINE",
+      "baseSurface": "SYMBOL_STAGE",
+      "primaryInput": "SYMBOL_TRIGGER",
+      "visualDependency": "HIGH",
+      "generationFit": "BESPOKE",
+      "referencePuzzles": [
+        150
+      ]
+    }
+  ]
+}

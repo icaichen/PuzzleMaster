@@ -1,0 +1,5 @@
+{
+  "puzzleId": "riveted-circuit-mosaic-001", "auditVersion": "1.0.0", "status": "VISUAL_REVIEWED",
+  "evidence": { "logic": { "passed": true, "solutions": 1 }, "interaction": { "passed": true, "solutionReplay": true, "selectRotatePlaceModel": true, "removeAndReset": true }, "visual": { "desktopReviewed": true, "mobileWidth": 390, "horizontalOverflow": false, "candidateListAntiPatternRemoved": true }, "playerData": { "available": false } },
+  "knownLimitations": ["当前点击落点代替正式拖拽；正式拼片预览和吸附手感仍需后续审核。"], "reviewedAt": "2026-07-04T00:00:00+08:00"
+}

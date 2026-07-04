@@ -1,0 +1,5 @@
+{
+  "puzzleId": "twin-signal-boundary-001", "auditVersion": "1.0.0", "status": "VISUAL_REVIEWED",
+  "evidence": { "logic": { "passed": true, "solutions": 1 }, "interaction": { "passed": true, "solutionReplay": true, "allAnchorsReachable": true, "closeValidation": true }, "visual": { "desktopReviewed": true, "mobileWidth": 390, "horizontalOverflow": false, "coordinateMappingCorrectedDuringAudit": true }, "playerData": { "available": false } },
+  "knownLimitations": ["尚未采集玩家对面积提示和信标异或规则的理解率。"], "reviewedAt": "2026-07-04T00:00:00+08:00"
+}

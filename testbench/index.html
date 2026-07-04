@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PuzzleMaster 可玩性测试台</title>
+  <link rel="stylesheet" href="/testbench/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="puzzle-nav" aria-label="测试谜题">
+      <a class="active" href="/">冷热阵列</a><a href="/testbench/route.html">钟摆渡线</a><a href="/testbench/logic.html">陈列记录</a><a href="/testbench/geometry.html">信标边界</a><a href="/testbench/assembly.html">回路拼板</a>
+    </nav>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">LOW-FIDELITY PLAYTEST · GRID_PLACEMENT</p>
+        <h1>冷热阵列</h1>
+      </div>
+      <button id="rules-toggle" class="secondary" type="button" aria-expanded="false">规则</button>
+    </header>
+
+    <section id="rules-panel" class="rules-panel" hidden>
+      <p>先点一个空格作为<strong>热端</strong>，再点相邻空格作为<strong>冷端</strong>。</p>
+      <ul>
+        <li>铺满 4×3 阵列，骨牌不能重叠。</li>
+        <li>热端不能上下左右相邻。</li>
+        <li>六块骨牌中恰好两块竖放。</li>
+        <li>带蓝色卡扣的骨牌固定不动。</li>
+      </ul>
+    </section>
+
+    <section class="game-layout">
+      <div class="playfield-card">
+        <div class="status-row" aria-live="polite">
+          <span id="instruction">请选择一个空格作为热端</span>
+          <span id="fill-status" class="counter">2 / 12 格</span>
+        </div>
+        <div id="board" class="board" role="grid" aria-label="冷热骨牌阵列"></div>
+        <div class="legend" aria-label="图例">
+          <span><i class="dot hot"></i>热端</span>
+          <span><i class="dot cold"></i>冷端</span>
+          <span><i class="rivet-mark"></i>固定</span>
+        </div>
+      </div>
+
+      <aside class="audit-card">
+        <p class="eyebrow">实时状态</p>
+        <div class="metric"><span>竖放骨牌</span><strong id="vertical-status">1 / 2</strong></div>
+        <div class="metric"><span>热端相邻</span><strong id="adjacency-status">0 处</strong></div>
+        <div class="metric"><span>覆盖状态</span><strong id="coverage-status">未完成</strong></div>
+        <p id="feedback" class="feedback" aria-live="assertive">固定骨牌已就位。</p>
+        <div class="actions">
+          <button id="undo" class="secondary" type="button">撤销</button>
+          <button id="reset" class="secondary" type="button">重置</button>
+          <button id="submit" class="primary" type="button">检查答案</button>
+        </div>
+        <details class="hint">
+          <summary>提示 1</summary>
+          <p>固定骨牌的热端已经封锁了它上下左右的热端位置。</p>
+        </details>
+      </aside>
+    </section>
+  </main>
+  <script type="module" src="/testbench/app.mjs"></script>
+</body>
+</html>

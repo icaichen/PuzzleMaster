@@ -1,0 +1,5 @@
+{
+  "puzzleId": "clockwork-transfer-001", "auditVersion": "1.0.0", "status": "VISUAL_REVIEWED",
+  "evidence": { "logic": { "passed": true, "solutions": 1 }, "interaction": { "passed": true, "solutionReplay": true, "finalTick": 5, "finalStation": "G" }, "visual": { "desktopReviewed": true, "mobileWidth": 390, "horizontalOverflow": false }, "playerData": { "available": false } },
+  "knownLimitations": ["尚未采集真人路线误判、完成时间和提示率。"], "reviewedAt": "2026-07-04T00:00:00+08:00"
+}

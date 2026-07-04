@@ -1,0 +1,5 @@
+{
+  "puzzleId": "distorted-exhibit-record-001", "auditVersion": "1.0.0", "status": "VISUAL_REVIEWED",
+  "evidence": { "logic": { "passed": true, "solutions": 1 }, "interaction": { "passed": true, "solutionReplay": true, "placementFeedback": true }, "visual": { "desktopReviewed": true, "mobileWidth": 390, "horizontalOverflow": false }, "playerData": { "available": false } },
+  "knownLimitations": ["低保真测试使用点击选择与展位放置，正式拖拽手感尚未审核。"], "reviewedAt": "2026-07-04T00:00:00+08:00"
+}
