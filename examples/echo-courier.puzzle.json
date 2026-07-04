@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "id": "echo-courier-001",
+    "revision": 1,
+    "status": "MACHINE_VERIFIED",
+    "title": "回声搬运工",
+    "mechanismId": "ORG-NAV-001",
+    "mechanismVersion": "1.0.0",
+    "runtimeKernel": "MULTI_AGENT_ROUTE"
+  },
+  "products": {
+    "app": true,
+    "wechat": true,
+    "productionMode": "PROCEDURAL"
+  },
+  "taxonomy": {
+    "cognitive": ["DELAYED_PLANNING", "MULTI_AGENT_COORDINATION"],
+    "interactions": ["SEQUENCE", "UNDO", "RESET"],
+    "representation": "GRID"
+  },
+  "content": {
+    "locale": "zh-CN",
+    "prompt": "用七个方向指令，让搬运工和两回合后重放指令的回声同时抵达各自出口。",
+    "rules": [
+      "搬运工立即执行每个方向指令。",
+      "回声执行两回合前的指令，前两回合不动。",
+      "任何角色不能撞墙、越界或与另一角色停在同一格。",
+      "第七回合结束时，两者必须分别位于自己的出口。"
+    ],
+    "hints": [
+      { "tier": 1, "kind": "OBSERVE", "text": "每个指令不只影响当前回合，还会在两回合后再次产生影响。" },
+      { "tier": 2, "kind": "INSIGHT", "text": "第二步向左是在为回声之后离开上方走廊准备路线。" },
+      { "tier": 3, "kind": "PROGRESS", "text": "前三步是下、左、下。" }
+    ],
+    "successText": "两人同时赶上了电梯。",
+    "failureText": "检查当前动作在两回合后会把回声带到哪里。"
+  },
+  "runtime": {
+    "mechanismKey": "delayed-replay-grid",
+    "validatorKey": "delayed-replay-grid/v1",
+    "solverKey": "delayed-replay-grid/exhaustive-v1",
+    "parameters": {
+      "width": 4,
+      "height": 4,
+      "delay": 2,
+      "turnLimit": 7,
+      "walls": [[3, 3], [4, 3]],
+      "courierGoal": [2, 3],
+      "echoGoal": [2, 4]
+    },
+    "initialState": {
+      "courier": [3, 1],
+      "echo": [2, 1],
+      "turn": 0,
+      "history": []
+    },
+    "allowedActions": ["UP", "DOWN", "LEFT", "RIGHT"]
+  },
+  "solutionPolicy": {
+    "kind": "UNIQUE",
+    "optimalityRequired": true,
+    "maxAcceptedSolutions": 1
+  },
+  "difficulty": {
+    "targetTier": 3,
+    "shortestSolutionLength": 7,
+    "candidateSpace": 16384,
+    "measuredFeatures": {
+      "trackedActors": 2,
+      "delay": 2,
+      "ruleInteractionLayers": 2
+    }
+  },
+  "verification": {
+    "status": "PASSED",
+    "solverVersion": "exhaustive-v1",
+    "seed": "echo-courier-001-r1",
+    "solutionCount": 1,
+    "verifiedAt": "2026-07-04T00:00:00+08:00"
+  },
+  "originality": {
+    "coreInsight": "当前动作会由第二个角色在两回合后重放。",
+    "structuralFingerprint": "grid|two-agents|shared-action-stream|delay=2|separate-goals|exact-turn=7",
+    "comparisonStatus": "INTERNAL_ONLY",
+    "risk": "UNKNOWN"
+  }
+}

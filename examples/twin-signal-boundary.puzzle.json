@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "id": "twin-signal-boundary-001",
+    "revision": 1,
+    "status": "MACHINE_VERIFIED",
+    "title": "双频信标边界",
+    "mechanismId": "ORG-GEO-001",
+    "mechanismVersion": "1.0.0",
+    "runtimeKernel": "LINE_REGION_GEOMETRY"
+  },
+  "products": {
+    "app": true,
+    "wechat": true,
+    "productionMode": "HYBRID"
+  },
+  "taxonomy": {
+    "cognitive": ["REGION_REASONING", "AREA_CONSTRAINT", "EXCLUSIVE_OR"],
+    "interactions": ["TAP", "UNDO", "RESET", "SUBMIT"],
+    "representation": "GEOMETRY"
+  },
+  "content": {
+    "locale": "zh-CN",
+    "prompt": "依次连接全部七个边界锚点并闭合。边界不能交叉，围成的面积必须是 47.5 格；同频的一对信标中必须恰有一个位于边界内。",
+    "rules": [
+      "每个字母锚点必须使用且只能使用一次。",
+      "闭合边界不能自相交。",
+      "边界面积必须恰好为 47.5 格。",
+      "两枚圆形信标中恰有一枚位于边界内部；信标不能落在边界上。"
+    ],
+    "hints": [
+      { "tier": 1, "kind": "OBSERVE", "text": "面积要求带有半格，留意哪些斜边会产生半格面积。" },
+      { "tier": 2, "kind": "INSIGHT", "text": "不要分别把两枚信标当成内外目标；规则是二选一，交换内外身份也可能成立。" },
+      { "tier": 3, "kind": "PROGRESS", "text": "A 与 C 可以直接相连；随后沿右上方继续寻找不交叉的边界。" }
+    ],
+    "successText": "边界面积正确，并且只隔离了一枚同频信标。",
+    "failureText": "检查边界是否交叉、面积是否为 47.5 格，以及是否恰有一枚信标在内部。"
+  },
+  "runtime": {
+    "mechanismKey": "paired-beacon-boundary",
+    "validatorKey": "line-region-geometry/v1",
+    "solverKey": "line-region-geometry/permutation-v1",
+    "parameters": {
+      "anchors": [
+        { "id": "A", "x": 0, "y": 0 },
+        { "id": "B", "x": 3, "y": 1 },
+        { "id": "C", "x": 7, "y": 0 },
+        { "id": "D", "x": 9, "y": 4 },
+        { "id": "E", "x": 7, "y": 8 },
+        { "id": "F", "x": 3, "y": 7 },
+        { "id": "G", "x": -1, "y": 5 }
+      ],
+      "targetArea2": 95,
+      "beaconPairs": [
+        { "id": "ROUND_FREQUENCY", "points": [{ "x": 0, "y": 1 }, { "x": 4, "y": 3 }] }
+      ]
+    },
+    "initialState": { "order": [] },
+    "allowedActions": ["ADD_ANCHOR", "REMOVE_LAST", "CLOSE", "UNDO", "RESET", "SUBMIT"]
+  },
+  "solutionPolicy": {
+    "kind": "UNIQUE",
+    "optimalityRequired": false,
+    "maxAcceptedSolutions": 1
+  },
+  "difficulty": {
+    "targetTier": 2,
+    "shortestSolutionLength": 8,
+    "candidateSpace": 360,
+    "measuredFeatures": {
+      "anchors": 7,
+      "simpleCanonicalLoops": 6,
+      "areaOnlySolutions": 2,
+      "beaconOnlySolutions": 2
+    }
+  },
+  "verification": {
+    "status": "PASSED",
+    "solverVersion": "line-region-geometry/permutation-v1",
+    "seed": "twin-signal-boundary-001-r1",
+    "solutionCount": 1,
+    "verifiedAt": "2026-07-04T00:00:00+08:00"
+  },
+  "originality": {
+    "coreInsight": "用精确面积筛选凹多边形，再以一对信标的异或内外关系排除面积相同的镜像式候选。",
+    "structuralFingerprint": "all-anchor-simple-loop|exact-half-grid-area|paired-beacon-xor-inside",
+    "comparisonStatus": "INTERNAL_ONLY",
+    "risk": "UNKNOWN"
+  }
+}

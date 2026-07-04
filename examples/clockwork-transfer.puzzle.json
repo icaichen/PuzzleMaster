@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "id": "clockwork-transfer-001",
+    "revision": 1,
+    "status": "MACHINE_VERIFIED",
+    "title": "钟摆渡线",
+    "mechanismId": "ORG-NAV-003",
+    "mechanismVersion": "1.0.0",
+    "runtimeKernel": "TIME_EXPANDED_ROUTE"
+  },
+  "products": {
+    "app": true,
+    "wechat": true,
+    "productionMode": "PROCEDURAL"
+  },
+  "taxonomy": {
+    "cognitive": ["RELATIVE_SPEED", "TRANSFER_TIMING", "PERIODIC_PLANNING"],
+    "interactions": ["WAIT", "TRANSFER", "UNDO", "RESET"],
+    "representation": "GRAPH"
+  },
+  "content": {
+    "locale": "zh-CN",
+    "prompt": "你站在A站的LOCAL摆渡车上。每拍可以继续乘坐，或在两车同站时换乘。请在第五拍结束前抵达G站。",
+    "rules": [
+      "LOCAL和GREEN每拍沿各自路线前进一站。",
+      "EXPRESS每拍沿路线前进两站；两辆诱饵车每拍前进一站。",
+      "只有当前时刻位于同一站的载具之间可以换乘。",
+      "等待或换乘都会消耗一拍，随后所有载具同时移动。",
+      "第五拍结束时必须位于G站。"
+    ],
+    "hints": [
+      { "tier": 1, "kind": "OBSERVE", "text": "先记录每辆车在第二拍和第四拍所在的站。" },
+      { "tier": 2, "kind": "INSIGHT", "text": "LOCAL第二拍到C站时会遇到两辆车，但只有一辆能在第四拍抵达E站。" },
+      { "tier": 3, "kind": "PROGRESS", "text": "前两拍留在LOCAL，第二拍结束前换乘GREEN。" }
+    ],
+    "successText": "你准确抓住两次会合，抵达了G站。",
+    "failureText": "记录每拍的载具位置，检查是否错过了换乘窗口。"
+  },
+  "runtime": {
+    "mechanismKey": "moving-carrier-transfer",
+    "validatorKey": "moving-carrier-transfer/v1",
+    "solverKey": "time-expanded-route/bfs-v1",
+    "parameters": {
+      "startCarrier": "LOCAL",
+      "startStation": "A",
+      "targetStation": "G",
+      "turnLimit": 5,
+      "carriers": [
+        { "id": "LOCAL", "route": ["A", "B", "C", "B"], "speed": 1, "phase": 0 },
+        { "id": "GREEN", "route": ["C", "D", "E", "D"], "speed": 1, "phase": 2 },
+        { "id": "EXPRESS", "route": ["E", "F", "G", "F"], "speed": 2, "phase": 0 },
+        { "id": "DECOY_NORTH", "route": ["C", "H", "I", "H"], "speed": 1, "phase": 2 },
+        { "id": "DECOY_SOUTH", "route": ["E", "J", "K", "J"], "speed": 1, "phase": 0 }
+      ]
+    },
+    "initialState": {
+      "tick": 0,
+      "carrierId": "LOCAL",
+      "transferCount": 0
+    },
+    "allowedActions": ["WAIT", "TRANSFER", "UNDO", "RESET"]
+  },
+  "solutionPolicy": {
+    "kind": "UNIQUE_OPTIMAL",
+    "optimalityRequired": true,
+    "maxAcceptedSolutions": 1
+  },
+  "difficulty": {
+    "targetTier": 2,
+    "shortestSolutionLength": 5,
+    "candidateSpace": 9,
+    "measuredFeatures": {
+      "carriers": 5,
+      "transferWindows": 2,
+      "requiredTransfers": 2,
+      "schedulePeriod": 4
+    }
+  },
+  "verification": {
+    "status": "PASSED",
+    "solverVersion": "time-expanded-route/bfs-v1",
+    "seed": "clockwork-transfer-001-r1",
+    "solutionCount": 1,
+    "verifiedAt": "2026-07-04T00:00:00+08:00"
+  },
+  "originality": {
+    "coreInsight": "等待与换乘共享时间成本，玩家必须利用不同周期载具的两次短暂会合。",
+    "structuralFingerprint": "carrier-transfer|5-carriers|period=4|same-station-transfer|transfer-consumes-tick|two-decoys|deadline=5",
+    "comparisonStatus": "INTERNAL_ONLY",
+    "risk": "UNKNOWN"
+  }
+}

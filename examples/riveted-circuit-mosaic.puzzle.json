@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "id": "riveted-circuit-mosaic-001",
+    "revision": 1,
+    "status": "MACHINE_VERIFIED",
+    "title": "铆钉回路拼板",
+    "mechanismId": "ORG-ASM-001",
+    "mechanismVersion": "1.0.0",
+    "runtimeKernel": "PIECE_ASSEMBLY"
+  },
+  "products": {
+    "app": true,
+    "wechat": true,
+    "productionMode": "HYBRID"
+  },
+  "taxonomy": {
+    "cognitive": ["SHAPE_ASSEMBLY", "EDGE_MATCHING", "GLOBAL_CONNECTIVITY"],
+    "interactions": ["DRAG", "DROP", "ROTATE", "UNDO", "RESET", "SUBMIT"],
+    "representation": "GEOMETRY"
+  },
+  "content": {
+    "locale": "zh-CN",
+    "prompt": "把其余三块线路碎片旋转并放入 4×3 框架。所有格必须填满，而且碎片上的铜线必须接成一条没有断口、没有分支的闭合回路。带铆钉的碎片不能移动。",
+    "rules": [
+      "四块碎片必须恰好覆盖整个框架，不能重叠或越界。",
+      "带铆钉的碎片位置和方向固定。",
+      "相邻格上的铜线端口必须成对连接，框架边缘不能出现端口。",
+      "全部铜线必须组成一条连续单环，不能形成多个小环或分支。"
+    ],
+    "hints": [
+      { "tier": 1, "kind": "OBSERVE", "text": "先检查固定碎片右端的铜线，那里必须由另一块碎片承接。" },
+      { "tier": 2, "kind": "INSIGHT", "text": "能填满轮廓的摆法不一定正确；每放一块都同时检查形状和铜线端口。" },
+      { "tier": 3, "kind": "PROGRESS", "text": "把第二块碎片放在右上角，并保持它原来的方向。" }
+    ],
+    "successText": "拼板完整，铜线形成了唯一的闭合回路。",
+    "failureText": "检查是否有重叠、空格、边缘断口，或彼此分离的小回路。"
+  },
+  "runtime": {
+    "mechanismKey": "single-loop-mosaic",
+    "validatorKey": "piece-assembly/single-loop-v1",
+    "solverKey": "piece-assembly/mrv-v1",
+    "parameters": {
+      "targetCells": [
+        { "x": 0, "y": 0 }, { "x": 1, "y": 0 }, { "x": 2, "y": 0 }, { "x": 3, "y": 0 },
+        { "x": 0, "y": 1 }, { "x": 1, "y": 1 }, { "x": 2, "y": 1 }, { "x": 3, "y": 1 },
+        { "x": 0, "y": 2 }, { "x": 1, "y": 2 }, { "x": 2, "y": 2 }, { "x": 3, "y": 2 }
+      ],
+      "pieces": [
+        {
+          "id": "P1",
+          "cells": [
+            { "x": 0, "y": 0, "ports": ["E", "S"] },
+            { "x": 1, "y": 0, "ports": ["W", "E"] },
+            { "x": 2, "y": 0, "ports": ["W", "E"] }
+          ]
+        },
+        {
+          "id": "P2",
+          "cells": [
+            { "x": 1, "y": 0, "ports": ["W", "S"] },
+            { "x": 0, "y": 1, "ports": ["S", "W"] },
+            { "x": 1, "y": 1, "ports": ["N", "S"] }
+          ]
+        },
+        {
+          "id": "P3",
+          "cells": [
+            { "x": 0, "y": 0, "ports": ["S", "N"] },
+            { "x": 1, "y": 0, "ports": ["E", "S"] },
+            { "x": 0, "y": 1, "ports": ["E", "N"] }
+          ]
+        },
+        {
+          "id": "P4",
+          "cells": [
+            { "x": 0, "y": 0, "ports": ["N", "W"] },
+            { "x": 1, "y": 0, "ports": ["E", "N"] },
+            { "x": 2, "y": 0, "ports": ["N", "W"] }
+          ]
+        }
+      ],
+      "fixedPlacements": [
+        { "pieceId": "P1", "rotation": 0, "offset": { "x": 0, "y": 0 } }
+      ]
+    },
+    "initialState": { "placements": [] },
+    "allowedActions": ["PLACE", "REMOVE", "ROTATE", "UNDO", "RESET", "SUBMIT"]
+  },
+  "solutionPolicy": {
+    "kind": "UNIQUE",
+    "optimalityRequired": false,
+    "maxAcceptedSolutions": 1
+  },
+  "difficulty": {
+    "targetTier": 2,
+    "shortestSolutionLength": 3,
+    "candidateSpace": 6,
+    "measuredFeatures": {
+      "pieces": 4,
+      "movablePieces": 3,
+      "shapeOnlySolutions": 6,
+      "withoutFixedPieceSolutions": 2,
+      "combinedSolutions": 1
+    }
+  },
+  "verification": {
+    "status": "PASSED",
+    "solverVersion": "piece-assembly/mrv-v1",
+    "seed": "riveted-circuit-mosaic-001-r1",
+    "solutionCount": 1,
+    "verifiedAt": "2026-07-04T00:00:00+08:00"
+  },
+  "originality": {
+    "coreInsight": "局部轮廓可以产生多种完整拼法，必须沿跨碎片铜线验证其是否构成唯一的全局单环。",
+    "structuralFingerprint": "fixed-fragment|polyomino-cover|matched-ports|single-global-cycle",
+    "comparisonStatus": "INTERNAL_ONLY",
+    "risk": "UNKNOWN"
+  }
+}

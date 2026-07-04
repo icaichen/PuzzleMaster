@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "id": "thermal-domino-array-001", "revision": 1, "status": "MACHINE_VERIFIED", "title": "冷热阵列",
+    "mechanismId": "ORG-GRD-001", "mechanismVersion": "1.0.0", "runtimeKernel": "GRID_PLACEMENT"
+  },
+  "products": { "app": true, "wechat": true, "productionMode": "PROCEDURAL" },
+  "taxonomy": {
+    "cognitive": ["EXACT_COVER", "LOCAL_EXCLUSION", "GLOBAL_COUNT"],
+    "interactions": ["TAP", "ROTATE", "PLACE", "UNDO", "RESET", "SUBMIT"],
+    "representation": "GRID"
+  },
+  "content": {
+    "locale": "zh-CN",
+    "prompt": "用冷热骨牌铺满 4×3 阵列。每块骨牌一端热、一端冷；热端不能上下左右相邻，并且恰好有两块骨牌竖放。蓝色卡扣固定的骨牌不能移动。",
+    "rules": [
+      "每块骨牌覆盖两个相邻格，阵列必须铺满且不能重叠。",
+      "任意两个热端不能上下左右相邻。",
+      "六块骨牌中恰好两块竖放。",
+      "带蓝色卡扣的骨牌位置、方向和冷热朝向固定。"
+    ],
+    "hints": [
+      { "tier": 1, "kind": "OBSERVE", "text": "固定骨牌的热端已经封锁了它上下左右的热端位置。" },
+      { "tier": 2, "kind": "INSIGHT", "text": "竖放名额只有两个；每决定一块竖放骨牌，都要同步检查热端禁邻格。" },
+      { "tier": 3, "kind": "PROGRESS", "text": "最左列需要一块竖放骨牌，它的热端位于下方。" }
+    ],
+    "successText": "阵列完整，热端彼此隔离，竖放数量正确。",
+    "failureText": "检查重叠和空格，并重新计算相邻热端与竖放骨牌数量。"
+  },
+  "runtime": {
+    "mechanismKey": "thermal-domino-array", "validatorKey": "grid-placement/thermal-domino-v1", "solverKey": "grid-placement/exact-cover-v1",
+    "parameters": { "width": 4, "height": 3, "verticalTarget": 2, "fixedCandidateIds": ["D06"] },
+    "initialState": { "selectedIds": [] },
+    "allowedActions": ["PLACE", "REMOVE", "ROTATE", "UNDO", "RESET", "SUBMIT"]
+  },
+  "solutionPolicy": { "kind": "UNIQUE", "optimalityRequired": false, "maxAcceptedSolutions": 1 },
+  "difficulty": {
+    "targetTier": 2, "shortestSolutionLength": 5, "candidateSpace": 34,
+    "measuredFeatures": { "cells": 12, "dominoes": 6, "withoutHotAdjacencyRuleSolutions": 32, "withoutVerticalCountSolutions": 3, "combinedSolutions": 1 }
+  },
+  "verification": {
+    "status": "PASSED", "solverVersion": "grid-placement/exact-cover-v1", "seed": "thermal-domino-array-001-r1",
+    "solutionCount": 1, "verifiedAt": "2026-07-04T00:00:00+08:00"
+  },
+  "originality": {
+    "coreInsight": "热端的局部禁邻约束会限制骨牌朝向，而全局竖放配额反过来排除局部均合法的铺法。",
+    "structuralFingerprint": "directed-domino-cover|fixed-candidate|hot-independent-set|exact-orientation-quota",
+    "comparisonStatus": "INTERNAL_ONLY", "risk": "UNKNOWN"
+  }
+}

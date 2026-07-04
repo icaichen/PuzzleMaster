@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "id": "layered-glass-001",
+    "revision": 1,
+    "status": "MACHINE_VERIFIED",
+    "title": "叠色修复师",
+    "mechanismId": "ORG-ORD-001",
+    "mechanismVersion": "1.0.0",
+    "runtimeKernel": "LAYER_COMPOSITING"
+  },
+  "products": {
+    "app": true,
+    "wechat": true,
+    "productionMode": "PROCEDURAL"
+  },
+  "taxonomy": {
+    "cognitive": ["PARTIAL_ORDER", "OCCLUSION_REASONING"],
+    "interactions": ["DRAG", "DROP", "SUBMIT", "RESET"],
+    "representation": "SEQUENCE"
+  },
+  "content": {
+    "locale": "zh-CN",
+    "prompt": "调整五条彩色玻璃的上下顺序，使正面看到的七个窗口与目标样板一致。",
+    "rules": [
+      "玻璃只能改变上下层级，不能翻面或左右移动。",
+      "每个窗口显示该位置最上方的非透明颜色。",
+      "必须使用全部五条玻璃。"
+    ],
+    "hints": [
+      { "tier": 1, "kind": "OBSERVE", "text": "先看第5个窗口：目标青色只有一块玻璃能够提供。" },
+      { "tier": 2, "kind": "INSIGHT", "text": "每个颜色冲突都能转化成一条上下关系。" },
+      { "tier": 3, "kind": "PROGRESS", "text": "D在A下方，A在C下方，C在E下方。" }
+    ],
+    "successText": "所有颜色都恢复到了正确位置。",
+    "failureText": "检查冲突窗口中哪块玻璃应该在上方。"
+  },
+  "runtime": {
+    "mechanismKey": "opaque-layer-order",
+    "validatorKey": "opaque-layer-order/v1",
+    "solverKey": "opaque-layer-order/permutation-v1",
+    "parameters": {
+      "strips": {
+        "A": "A...C.A",
+        "B": ".A....B",
+        "C": "B.DA.A.",
+        "D": ".AD.A.B",
+        "E": "...D..A"
+      },
+      "target": "BADDCAB",
+      "transparent": "."
+    },
+    "initialState": {
+      "order": ["A", "B", "C", "D", "E"]
+    },
+    "allowedActions": ["MOVE_LAYER", "RESET", "SUBMIT"]
+  },
+  "solutionPolicy": {
+    "kind": "UNIQUE",
+    "optimalityRequired": false,
+    "maxAcceptedSolutions": 1
+  },
+  "difficulty": {
+    "targetTier": 3,
+    "shortestSolutionLength": 1,
+    "candidateSpace": 120,
+    "measuredFeatures": {
+      "objects": 5,
+      "constraintWindows": 4,
+      "partialOrderDepth": 5
+    }
+  },
+  "verification": {
+    "status": "PASSED",
+    "solverVersion": "permutation-v1",
+    "seed": "layered-glass-001-r1",
+    "solutionCount": 1,
+    "verifiedAt": "2026-07-04T00:00:00+08:00"
+  },
+  "originality": {
+    "coreInsight": "目标颜色把局部遮挡关系转化为完整层叠偏序。",
+    "structuralFingerprint": "ordered-layers|5-strips|7-windows|topmost-opaque|target-visible-pattern",
+    "comparisonStatus": "INTERNAL_ONLY",
+    "risk": "UNKNOWN"
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://puzzlemaster.local/schemas/puzzle-definition.schema.json",
+  "title": "PuzzleMaster Puzzle Definition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "identity",
+    "products",
+    "taxonomy",
+    "content",
+    "runtime",
+    "solutionPolicy",
+    "difficulty",
+    "verification",
+    "originality"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "revision", "status", "title", "mechanismId", "mechanismVersion", "runtimeKernel"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{2,63}$" },
+        "revision": { "type": "integer", "minimum": 1 },
+        "status": {
+          "enum": ["IDEA", "SPECIFIED", "MACHINE_VERIFIED", "CRITIC_REVIEWED", "PLAYABLE", "PRODUCT_ACCEPTED", "RELEASED", "REJECTED"]
+        },
+        "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "mechanismId": { "type": "string", "pattern": "^ORG-[A-Z]{3}-[0-9]{3}$" },
+        "mechanismVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "runtimeKernel": {
+          "enum": [
+            "BEAM_REFLECTION", "CSP_ASSIGNMENT", "DYNAMIC_GRID_ROUTE", "EXACT_COVER_PARTITION",
+            "GEOMETRIC_PLACEMENT", "GRAPH_DEDUCTION", "GRAPH_ROUTE", "GRID_PLACEMENT", "GRID_TRANSFORM",
+            "INFORMATION_DEDUCTION", "LAYER_COMPOSITING", "LINE_REGION_GEOMETRY", "MEASUREMENT_TRANSFER",
+            "MULTI_AGENT_ROUTE", "PACKING_GEOMETRY", "PIECE_ASSEMBLY", "PROGRAM_EXECUTION", "REARRANGEMENT",
+            "RESOURCE_ROUTE", "ROTATION_CONSTRAINT", "RULE_DISCOVERY", "SEQUENCE_REASONING", "SEQUENCE_SIMULATION",
+            "SLIDING_PHYSICS", "SPATIAL_TRANSFORM", "STATIC_REASONING", "TIME_EXPANDED_ROUTE", "TOGGLE_NETWORK",
+            "TOKEN_TRANSITION", "VISUAL_INSPECTION"
+          ]
+        }
+      }
+    },
+    "products": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["app", "wechat", "productionMode"],
+      "properties": {
+        "app": { "type": "boolean" },
+        "wechat": { "type": "boolean" },
+        "productionMode": { "enum": ["BESPOKE", "PROCEDURAL", "HYBRID"] }
+      }
+    },
+    "taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cognitive", "interactions", "representation"],
+      "properties": {
+        "cognitive": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+        "interactions": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+        "representation": { "enum": ["GRID", "GRAPH", "SEQUENCE", "GEOMETRY", "SET", "TEXT", "HYBRID"] }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locale", "prompt", "rules", "hints", "successText", "failureText"],
+      "properties": {
+        "locale": { "type": "string", "minLength": 2 },
+        "prompt": { "type": "string", "minLength": 1 },
+        "rules": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "hints": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tier", "kind", "text"],
+            "properties": {
+              "tier": { "type": "integer", "minimum": 1 },
+              "kind": { "enum": ["OBSERVE", "INSIGHT", "PROGRESS", "FINAL"] },
+              "text": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "successText": { "type": "string", "minLength": 1 },
+        "failureText": { "type": "string", "minLength": 1 }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mechanismKey", "validatorKey", "solverKey", "parameters", "initialState", "allowedActions"],
+      "properties": {
+        "mechanismKey": { "type": "string", "minLength": 1 },
+        "validatorKey": { "type": "string", "minLength": 1 },
+        "solverKey": { "type": "string", "minLength": 1 },
+        "parameters": { "type": "object" },
+        "initialState": { "type": "object" },
+        "allowedActions": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } }
+      }
+    },
+    "solutionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "optimalityRequired", "maxAcceptedSolutions"],
+      "properties": {
+        "kind": { "enum": ["UNIQUE", "UNIQUE_OPTIMAL", "FINITE_ACCEPTED", "OPEN_CONSTRAINT"] },
+        "optimalityRequired": { "type": "boolean" },
+        "maxAcceptedSolutions": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "difficulty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targetTier", "shortestSolutionLength", "candidateSpace", "measuredFeatures"],
+      "properties": {
+        "targetTier": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "shortestSolutionLength": { "type": "integer", "minimum": 0 },
+        "candidateSpace": { "type": "integer", "minimum": 1 },
+        "measuredFeatures": { "type": "object" }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "solverVersion", "seed", "solutionCount", "verifiedAt"],
+      "properties": {
+        "status": { "enum": ["PENDING", "PASSED", "FAILED"] },
+        "solverVersion": { "type": "string", "minLength": 1 },
+        "seed": { "type": "string" },
+        "solutionCount": { "type": "integer", "minimum": 0 },
+        "verifiedAt": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "originality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coreInsight", "structuralFingerprint", "comparisonStatus", "risk"],
+      "properties": {
+        "coreInsight": { "type": "string", "minLength": 1 },
+        "structuralFingerprint": { "type": "string", "minLength": 1 },
+        "comparisonStatus": { "enum": ["PENDING", "INTERNAL_ONLY", "REVIEWED"] },
+        "risk": { "enum": ["UNKNOWN", "LOW", "MEDIUM", "HIGH"] }
+      }
+    }
+  }
+}

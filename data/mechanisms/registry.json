@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "mechanisms": [
+    {
+      "id": "ORG-NAV-001",
+      "name": "延迟重放双角色路线",
+      "runtimeKernel": "MULTI_AGENT_ROUTE",
+      "version": "1.0.0",
+      "productionMode": "PROCEDURAL",
+      "status": "PROTOTYPE"
+    },
+    {
+      "id": "ORG-ORD-001",
+      "name": "透明层叠偏序重建",
+      "runtimeKernel": "LAYER_COMPOSITING",
+      "version": "1.0.0",
+      "productionMode": "PROCEDURAL",
+      "status": "PROTOTYPE"
+    },
+    {
+      "id": "ORG-TIM-001",
+      "name": "多周期手动校准",
+      "runtimeKernel": "TIME_EXPANDED_ROUTE",
+      "version": "1.0.0",
+      "productionMode": "PROCEDURAL",
+      "status": "PROTOTYPE"
+    },
+    {
+      "id": "ORG-NAV-002",
+      "name": "移动交换节点属性路线",
+      "runtimeKernel": "RESOURCE_ROUTE",
+      "version": "1.0.0",
+      "productionMode": "PROCEDURAL",
+      "status": "GENERATOR_PROTOTYPE"
+    },
+    {
+      "id": "ORG-NAV-003",
+      "name": "周期移动载具换乘",
+      "runtimeKernel": "TIME_EXPANDED_ROUTE",
+      "version": "1.0.0",
+      "productionMode": "PROCEDURAL",
+      "status": "PROTOTYPE"
+    },
+    {
+      "id": "ORG-LOG-001",
+      "name": "带真假计数的唯一排位",
+      "runtimeKernel": "CSP_ASSIGNMENT",
+      "version": "1.0.0",
+      "productionMode": "PROCEDURAL",
+      "status": "PROTOTYPE"
+    },
+    {
+      "id": "ORG-GEO-001",
+      "name": "精确面积成对信标边界",
+      "runtimeKernel": "LINE_REGION_GEOMETRY",
+      "version": "1.0.0",
+      "productionMode": "HYBRID",
+      "status": "PROTOTYPE"
+    },
+    {
+      "id": "ORG-ASM-001",
+      "name": "固定碎片单环线路拼板",
+      "runtimeKernel": "PIECE_ASSEMBLY",
+      "version": "1.0.0",
+      "productionMode": "HYBRID",
+      "status": "PROTOTYPE"
+    },
+    {
+      "id": "ORG-GRD-001",
+      "name": "冷热定向骨牌精确覆盖",
+      "runtimeKernel": "GRID_PLACEMENT",
+      "version": "1.0.0",
+      "productionMode": "PROCEDURAL",
+      "status": "PROTOTYPE"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "id": "temperature-courier-001",
+    "revision": 1,
+    "status": "MACHINE_VERIFIED",
+    "title": "温差邮差",
+    "mechanismId": "ORG-NAV-002",
+    "mechanismVersion": "1.0.0",
+    "runtimeKernel": "RESOURCE_ROUTE"
+  },
+  "products": {
+    "app": true,
+    "wechat": true,
+    "productionMode": "PROCEDURAL"
+  },
+  "taxonomy": {
+    "cognitive": ["DYNAMIC_ROUTING", "ATTRIBUTE_TRANSPORT"],
+    "interactions": ["SELECT", "UNDO", "RESET"],
+    "representation": "GRAPH"
+  },
+  "content": {
+    "locale": "zh-CN",
+    "prompt": "从A出发，在七步内取得C和E的信件并抵达G。只能穿过温差恰好为1°C的通道，每次穿过后两端温度交换。",
+    "rules": [
+      "只能在地图上相连的温室之间移动。",
+      "两间温室的当前温差恰好为1°C时才能通行。",
+      "每次移动后，通道两端的温度牌交换。",
+      "必须取得C和E的信件，在七步内抵达G。"
+    ],
+    "hints": [
+      { "tier": 1, "kind": "OBSERVE", "text": "E只有一条通道，考虑什么时候前往E最节省步数。" },
+      { "tier": 2, "kind": "INSIGHT", "text": "B和F初始同温；需要通过交换把2°C带到B。" },
+      { "tier": 3, "kind": "PROGRESS", "text": "前四个位置是A、E、A、B。之后先取得C的信。" }
+    ],
+    "successText": "两封信都准时送达。",
+    "failureText": "除了邮差的位置，还要追踪每次交换后的温度。"
+  },
+  "runtime": {
+    "mechanismKey": "temperature-swap-route",
+    "validatorKey": "temperature-swap-route/v1",
+    "solverKey": "temperature-swap-route/bfs-v1",
+    "parameters": {
+      "nodes": ["A", "B", "C", "D", "E", "F", "G"],
+      "edges": [["A", "B"], ["B", "C"], ["A", "D"], ["A", "E"], ["D", "F"], ["F", "G"], ["B", "F"], ["C", "D"]],
+      "requiredPickups": ["C", "E"],
+      "goal": "G",
+      "turnLimit": 7,
+      "requiredTemperatureDifference": 1
+    },
+    "initialState": {
+      "position": "A",
+      "temperatures": { "A": 2, "B": 3, "C": 3, "D": 4, "E": 1, "F": 3, "G": 3 },
+      "collected": [],
+      "turn": 0
+    },
+    "allowedActions": ["MOVE_TO_NEIGHBOR", "UNDO", "RESET"]
+  },
+  "solutionPolicy": {
+    "kind": "UNIQUE_OPTIMAL",
+    "optimalityRequired": true,
+    "maxAcceptedSolutions": 1
+  },
+  "difficulty": {
+    "targetTier": 3,
+    "shortestSolutionLength": 7,
+    "candidateSpace": 19,
+    "measuredFeatures": {
+      "reachableStatesAtDepth10": 19,
+      "trackedTemperatures": 7,
+      "requiredPickups": 2,
+      "ruleInteractionLayers": 2
+    }
+  },
+  "verification": {
+    "status": "PASSED",
+    "solverVersion": "bfs-v1",
+    "seed": "temperature-courier-001-r1",
+    "solutionCount": 1,
+    "verifiedAt": "2026-07-04T00:00:00+08:00"
+  },
+  "originality": {
+    "coreInsight": "移动会交换通行属性，角色沿路线携带被交换的属性以打开后续边。",
+    "structuralFingerprint": "graph|position+node-temperatures|edge-valid-if-diff=1|swap-on-traverse|two-pickups|goal|limit=7",
+    "comparisonStatus": "INTERNAL_ONLY",
+    "risk": "UNKNOWN"
+  }
+}

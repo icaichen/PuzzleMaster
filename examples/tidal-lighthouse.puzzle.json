@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "id": "tidal-lighthouse-001",
+    "revision": 1,
+    "status": "MACHINE_VERIFIED",
+    "title": "潮汐灯塔",
+    "mechanismId": "ORG-TIM-001",
+    "mechanismVersion": "1.0.0",
+    "runtimeKernel": "TIME_EXPANDED_ROUTE"
+  },
+  "products": {
+    "app": true,
+    "wechat": true,
+    "productionMode": "PROCEDURAL"
+  },
+  "taxonomy": {
+    "cognitive": ["PERIODIC_PLANNING", "FUTURE_STATE_TRACKING"],
+    "interactions": ["SELECT", "SEQUENCE", "UNDO", "RESET"],
+    "representation": "SEQUENCE"
+  },
+  "content": {
+    "locale": "zh-CN",
+    "prompt": "每拍校准一层灯环，让灯塔只在第3、5、7拍向北发光。",
+    "rules": [
+      "每拍必须选择一层顺时针旋转90度。",
+      "若三层缺口对齐，灯塔立即向该方向发光。",
+      "发光判定后，内环不动，中环顺时针90度，外环顺时针180度。",
+      "电池只能发光三次，必须刚好照亮第3、5、7拍经过北方的船。"
+    ],
+    "hints": [
+      { "tier": 1, "kind": "OBSERVE", "text": "不要只看当前对齐，还要计算本拍结束后的自动旋转。" },
+      { "tier": 2, "kind": "INSIGHT", "text": "前三拍持续调整同一层，可以让第一次对齐发生在第三拍。" },
+      { "tier": 3, "kind": "PROGRESS", "text": "前三拍选择外环。" }
+    ],
+    "successText": "三艘船都在正确时刻看到了灯光。",
+    "failureText": "检查是哪一次自动旋转改变了下一拍的对齐。"
+  },
+  "runtime": {
+    "mechanismKey": "periodic-ring-alignment",
+    "validatorKey": "periodic-ring-alignment/v1",
+    "solverKey": "periodic-ring-alignment/exhaustive-v1",
+    "parameters": {
+      "sectors": 4,
+      "turnLimit": 7,
+      "automaticRotation": [0, 1, 2],
+      "targetTrace": [null, null, 0, null, 0, null, 0]
+    },
+    "initialState": {
+      "ringPositions": [0, 2, 1],
+      "turn": 0,
+      "shotsRemaining": 3
+    },
+    "allowedActions": ["ROTATE_INNER", "ROTATE_MIDDLE", "ROTATE_OUTER"]
+  },
+  "solutionPolicy": {
+    "kind": "UNIQUE",
+    "optimalityRequired": true,
+    "maxAcceptedSolutions": 1
+  },
+  "difficulty": {
+    "targetTier": 3,
+    "shortestSolutionLength": 7,
+    "candidateSpace": 2187,
+    "measuredFeatures": {
+      "trackedCycles": 3,
+      "automaticPhases": 1,
+      "targetEvents": 3
+    }
+  },
+  "verification": {
+    "status": "PASSED",
+    "solverVersion": "exhaustive-v1",
+    "seed": "tidal-lighthouse-001-r1",
+    "solutionCount": 1,
+    "verifiedAt": "2026-07-04T00:00:00+08:00"
+  },
+  "originality": {
+    "coreInsight": "手动调整与每层不同的自动周期共同决定未来对齐。",
+    "structuralFingerprint": "three-rings|four-sectors|manual-one-ring|auto-speeds=0,1,2|target-trace=--N-N-N",
+    "comparisonStatus": "INTERNAL_ONLY",
+    "risk": "UNKNOWN"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "id": "distorted-exhibit-record-001",
+    "revision": 1,
+    "status": "MACHINE_VERIFIED",
+    "title": "失真的陈列记录",
+    "mechanismId": "ORG-LOG-001",
+    "mechanismVersion": "1.0.0",
+    "runtimeKernel": "CSP_ASSIGNMENT"
+  },
+  "products": {
+    "app": true,
+    "wechat": true,
+    "productionMode": "PROCEDURAL"
+  },
+  "taxonomy": {
+    "cognitive": ["ORDER_DEDUCTION", "EXACT_TRUTH_COUNT"],
+    "interactions": ["DRAG", "DROP", "UNDO", "RESET", "SUBMIT"],
+    "representation": "SEQUENCE"
+  },
+  "content": {
+    "locale": "zh-CN",
+    "prompt": "把天球仪、钥匙、面具、羽毛和灯从左到右放上五个展台。普通记录全部正确，三条受损记录中恰有一条错误。",
+    "rules": [
+      "钥匙紧靠在天球仪右边。",
+      "灯不与面具相邻。",
+      "面具位于灯的左边。",
+      "以下三条受损记录中恰有一条错误：天球仪位于一端；灯位于羽毛左边；面具与羽毛相邻。"
+    ],
+    "hints": [
+      { "tier": 1, "kind": "OBSERVE", "text": "先把天球仪和钥匙看成一个顺序固定的两件组合。" },
+      { "tier": 2, "kind": "INSIGHT", "text": "尝试判断三条受损记录中哪一条为假；另外两条必须同时成立。" },
+      { "tier": 3, "kind": "PROGRESS", "text": "天球仪在最左端，钥匙在第二个展台。" }
+    ],
+    "successText": "陈列顺序与所有可靠记录完全一致。",
+    "failureText": "检查三条受损记录是否恰好只有一条错误。"
+  },
+  "runtime": {
+    "mechanismKey": "artifact-lineup",
+    "validatorKey": "csp-assignment/v1",
+    "solverKey": "csp-assignment/mrv-v1",
+    "parameters": {
+      "variables": [
+        { "id": "ORRERY", "domain": [1, 2, 3, 4, 5] },
+        { "id": "KEY", "domain": [1, 2, 3, 4, 5] },
+        { "id": "MASK", "domain": [1, 2, 3, 4, 5] },
+        { "id": "FEATHER", "domain": [1, 2, 3, 4, 5] },
+        { "id": "LANTERN", "domain": [1, 2, 3, 4, 5] }
+      ],
+      "constraints": [
+        { "type": "ALL_DIFFERENT", "variables": ["ORRERY", "KEY", "MASK", "FEATHER", "LANTERN"] },
+        { "type": "OFFSET", "left": "KEY", "right": "ORRERY", "delta": 1 },
+        { "type": "NOT_ADJACENT", "left": "LANTERN", "right": "MASK" },
+        { "type": "LESS_THAN", "left": "MASK", "right": "LANTERN" },
+        {
+          "type": "EXACTLY",
+          "count": 2,
+          "constraints": [
+            { "type": "AT_END", "variable": "ORRERY" },
+            { "type": "LESS_THAN", "left": "LANTERN", "right": "FEATHER" },
+            { "type": "ADJACENT", "left": "MASK", "right": "FEATHER" }
+          ]
+        }
+      ]
+    },
+    "initialState": { "assignments": {} },
+    "allowedActions": ["PLACE", "CLEAR", "UNDO", "RESET", "SUBMIT"]
+  },
+  "solutionPolicy": {
+    "kind": "UNIQUE",
+    "optimalityRequired": false,
+    "maxAcceptedSolutions": 1
+  },
+  "difficulty": {
+    "targetTier": 2,
+    "shortestSolutionLength": 5,
+    "candidateSpace": 120,
+    "measuredFeatures": {
+      "variables": 5,
+      "topLevelConstraints": 5,
+      "conditionalTruthStatements": 3,
+      "solverNodesVisited": 50
+    }
+  },
+  "verification": {
+    "status": "PASSED",
+    "solverVersion": "csp-assignment/mrv-v1",
+    "seed": "distorted-exhibit-record-001-r1",
+    "solutionCount": 1,
+    "verifiedAt": "2026-07-04T00:00:00+08:00"
+  },
+  "originality": {
+    "coreInsight": "在普通位置约束之外，还必须反推三条嵌套陈述中唯一的错误记录。",
+    "structuralFingerprint": "lineup|5-objects|offset+not-adjacent+order|exactly-two-of-three-statements-true",
+    "comparisonStatus": "INTERNAL_ONLY",
+    "risk": "UNKNOWN"
+  }
+}
